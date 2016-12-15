@@ -2,7 +2,7 @@ package all_class;
 
 import java.util.ArrayList;
 
-public class statistic_info {
+public class statistic_info {//生成院长的统计信息
 	ArrayList<Drug_info>Drug_list;  //系统的药品库存
 	  String[] Count_name;//科室的名字
 		int[] Count_office;//科室的挂号数

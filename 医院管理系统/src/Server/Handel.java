@@ -26,6 +26,7 @@ public class Handel {
 	 public  Handel(Global_info go) {
 		global_info=go;
 	}
+	 
 	 //关于病人门诊挂号收费模块，同时接收处理后的信息
 	public static void registration_Thread(){
 		new Thread(new Runnable() {
@@ -264,15 +265,12 @@ public static void Charge_sum(){
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
-				
-				
 			}
 		}).start();
 		
 	}
-	public static statistic_info Statistic_info(){
+	
+	public static statistic_info Statistic_info(){//统计信息
 		
 		ArrayList<Drug_info>Drug_list=new ArrayList<Drug_info>();
         String[] Count_name=new String[global_info.getCount_office().size()];

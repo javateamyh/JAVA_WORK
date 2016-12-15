@@ -16,6 +16,18 @@ public class Office implements Serializable {
 		
 	}
 	
+	public float getCharge() {
+		return Charge;
+	}
+
+	public void setCharge(float charge) {
+		Charge = charge;
+	}
+
+	public ArrayList<String> getDoctor() {
+		return Doctor;
+	}
+
 	public void setDoctor(ArrayList<String> doctor) {
 		Doctor = doctor;
 	}
