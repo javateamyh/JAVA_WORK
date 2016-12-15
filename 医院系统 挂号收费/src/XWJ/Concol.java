@@ -11,8 +11,6 @@ public class Concol {
 		//Case[] list3=new  Case[50];
 		//Office[] list4=new  Office[50];
 		
-	    private boolean F;
-	    private boolean T;
 	    static ArrayList<Case> list1 = new ArrayList<Case>();
         public static void add_list1(Case case1){
         	list1.add(case1);
@@ -42,28 +40,43 @@ public class Concol {
 			 Office office=new Office("精神科","李",3);
 			 Appointment appointment=new Appointment("11.3",setApp_office(office),true);
 			 Patient_info patient_info=new Patient_info("ZHANG",true,12,"123");
-			 Case  case1=new Case(setPi(patient_info),setApp(appointment),setCharge());
+			 Charge_info charge_info=new Charge_info(6.0,7.0,8.0,9.0,true);
+			 Case  case1=new Case(setPi(patient_info),setApp(appointment),setCharge(charge_info));
 			 
-			 Case.setPi();
-		     System.out.println("输入病人选择科室");
-		     Scanner S2= new Scanner(System.in);
-		     String S3=S2.next();
-		     office.setOffice_name(S3);
-		     
-		     System.out.println("输入病人选择科室医生");
-		     Scanner S4= new Scanner(System.in);
-		     String S5=S4.next();
-		     //ArrayList<String> S5=S4.next();
-		     office.setDoctor(S5);
-		     office.setCharge(4);
+			
 			 //Appointment  appointment=new  Appointment("张三",, T);
-			 list3.add(office);	
+			 list1.add(case1);	
 			 //String first = (String) list11.getFirst();  
 		      //  System.out.println("<--list中第一个元素为 ：" + first + "-->");  
-			 for ( int i=0 ; i <list3.size(); i++) 
-			    {
-			 System.out.println(list3.get(i).getOffice_name());}
-}
+			 for ( int i=0 ; i <list1.size(); i++) 
+			    { 
+				 //patient_info.setName("Zhang");
+			 //System.out.println(list1.get(i).getPi().getName()); 
+			 }
+//}
+			 System.out.println(list1.size());}
+
+		
+
+		private Object getName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		private Object setPi(Patient_info patient_info) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		private Object setCharge(Charge_info charge_info) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		private Object setApp(Appointment appointment) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 		private Office setApp_office(Office office) {
 			// TODO Auto-generated method stub

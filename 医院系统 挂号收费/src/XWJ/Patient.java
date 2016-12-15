@@ -2,10 +2,15 @@ package XWJ;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import XWJ.Res.ButtonHandler2;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -93,6 +98,20 @@ public class Patient extends JFrame {
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(10, 200, 414, 31);
 		contentPane.add(panel_4);
+		class ButtonHandler5 implements ActionListener{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub  
+				Patient_Now frame = new Patient_Now();
+				frame.setVisible(true);
+			}	
+		}
+		
+		JButton btnIn = new JButton("\u70B9\u51FB\u67E5\u770B\u6700\u65B0\u6392\u961F\u60C5\u51B5");
+		panel_4.add(btnIn);
+		ButtonHandler5 btnHandler5=new ButtonHandler5();
+		btnIn.addActionListener(btnHandler5);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 37, 414, 45);
@@ -100,5 +119,7 @@ public class Patient extends JFrame {
 		
 		JLabel label_5 = new JLabel("\u6B64\u75C5\u4EBA\u5DF2\u7ECF\u9884\u7EA6");
 		panel.add(label_5);
+		
+		
 	}
 }

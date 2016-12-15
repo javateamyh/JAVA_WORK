@@ -9,13 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class Res_Pay extends JFrame {
+public class Patient_Now extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textName;
 
 	/**
 	 * Launch the application.
@@ -24,7 +22,7 @@ public class Res_Pay extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Res_Pay frame = new Res_Pay();
+					Patient_Now frame = new Patient_Now();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +34,7 @@ public class Res_Pay extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Res_Pay() {
+	public Patient_Now() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -45,56 +43,51 @@ public class Res_Pay extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 10, 424, 31);
+		panel.setBounds(10, 0, 424, 34);
 		contentPane.add(panel);
 		
-		JLabel label = new JLabel("\u6B63\u5728\u6302\u53F7\u6536\u8D39");
+		JLabel label = new JLabel("\u6B64\u75C5\u4EBA\u6700\u65B0\u9884\u7EA6\u60C5\u51B5");
 		panel.add(label);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 51, 424, 31);
+		panel_1.setBounds(10, 44, 424, 34);
 		contentPane.add(panel_1);
 		
-		JLabel label_1 = new JLabel("\u8BF7\u8F93\u5165\u75C5\u4EBA\u59D3\u540D");
+		JLabel label_1 = new JLabel("\u9884\u7EA6\u79D1\u5BA4");
 		panel_1.add(label_1);
 		
-		textName = new JTextField();
-		panel_1.add(textName);
-		textName.setColumns(10);
+		JLabel lblNewLabel = new JLabel("\u663E\u793A\u533B\u751F\u4E8B\u4EF6");
+		panel_1.add(lblNewLabel);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(10, 92, 424, 37);
+		panel_2.setBounds(10, 98, 424, 34);
 		contentPane.add(panel_2);
 		
-		JLabel label_2 = new JLabel("\u5E94\u652F\u4ED8\u6302\u53F7\u8D39\u7528");
+		JLabel lblNewLabel_1 = new JLabel("\u9884\u7EA6\u533B\u751F");
+		panel_2.add(lblNewLabel_1);
+		
+		JLabel label_2 = new JLabel("\u663E\u793A\u533B\u751F\u59D3\u540D");
 		panel_2.add(label_2);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		panel_2.add(lblNewLabel);
-		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(10, 139, 424, 37);
+		panel_3.setBounds(10, 152, 424, 34);
 		contentPane.add(panel_3);
 		
-		JLabel label_3 = new JLabel("\u8BF7\u53CA\u65F6\u7F34\u8D39\u5C31\u8BCA");
-		panel_3.add(label_3);
-		
 		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(10, 175, 424, 51);
+		panel_4.setBounds(10, 184, 424, 67);
 		contentPane.add(panel_4);
-		
 		class ButtonHandler5 implements ActionListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub  
-				Register frame = new Register();
+				Res_Pay frame = new Res_Pay();
 				frame.setVisible(true);
 			}	
 		}
-		JButton buttonGood = new JButton("\u786E\u8BA4\u7F34\u8D39");
-		panel_4.add(buttonGood);
+		JButton buttonPay = new JButton("\u6302\u53F7\u6536\u8D39");
+		panel_4.add(buttonPay);
 		ButtonHandler5 btnHandler5=new ButtonHandler5();
-		buttonGood.addActionListener(btnHandler5);
+		buttonPay.addActionListener(btnHandler5);	
 	}
 }
