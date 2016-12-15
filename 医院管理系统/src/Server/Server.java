@@ -133,15 +133,16 @@ public class Server {
 			        os=new ObjectOutputStream(socket.getOutputStream());
 			        try {
 						Account account=(Account) is.readObject();
+						if (account.getFlag()==6||account.getFlag()==7) {
+							Select_moduel();
+						}
 						for(int i=0;i<global_info.getAccount_list().size();i++)
 						{
 							if(account.getID().equals(global_info.getAccount_list().get(i).getID()))
 								if(account.getCode().equals(global_info.getAccount_list().get(i).getCode()))
 								{
-									account.setPass(-1);
-									os.writeObject(account);
-									os.flush();
 									
+									Select_moduel();
 								}
 						}
 						
@@ -163,14 +164,12 @@ public class Server {
 		}).start();
 	}
 	
-	
 	//根据客户端的信息来判别模块
 	public static void Select_moduel(){
 		
 		new Thread(new Runnable() {
-			Handel handel=new Handel();
-			@SuppressWarnings("deprecation")
-			@Override
+			Handel handel=new Handel(global_info);
+		     
 			public void run() {
 				// TODO Auto-generated method stub
 				
@@ -191,17 +190,14 @@ public class Server {
 						else //开始来选择模块
 						{
 							switch (account.getFlag()) {
-							case 1:
+							case 1:  
 								break;
-							case 2:handel.registration_Thread(); break;
-							case 3:
-								break;
-							case 4: break;
-							case 5:break;
-							case 6: break;
-							case 7 :handel.register_Thread();   break;
-					
-							
+							case 2:handel.registration_Thread();handel.Charge_sum(); break;
+							case 3:handel.docter_hander();break;
+							case 4:handel.Druger_info(); break;
+							case 5:   break;
+							case 6:handel.register_Thread(); break;
+							case 7 :handel.Screen_info();;   break;
 							default:
 								break;
 							}
@@ -229,7 +225,6 @@ public class Server {
 		getGlobal();//服务器的初始化
 		Check_count();//一个线程专门用于账号的在线验证
 		
-	    
 		
 	}
 
