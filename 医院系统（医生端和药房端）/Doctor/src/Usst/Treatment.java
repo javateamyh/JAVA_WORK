@@ -24,13 +24,16 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 
 public class Treatment extends JFrame {
-    static Case c1;
-    static Case cc;
+    static ArrayList<Case> clist;//接受服务器信息的clist
+    static ArrayList<Case> clist1;//发送修改服务器的clist1
+    static Case cc=null;//加在序列clist1的case对象
     static int sum;
+    static int i=0;
     static ArrayList<Drug_info> list;
     static  private Drug_info d1,d2,d3,d4;
     static Charge_info crg1;
     private static ObjectOutputStream out;
+    private static Account acc;
 	private JPanel contentPane;
 	private JTextField med_na1;
 	private JTextField med_num1;
@@ -48,28 +51,22 @@ public class Treatment extends JFrame {
 	public static void main(String[] args) {
 	
 		
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Treatment frame = new Treatment();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		int cishu=0;
+	    while(cishu++<4){
+	    	
 		Socket server=null;
 		try {
-			server =new Socket("127.0.0",2303);
+			server =new Socket("192.168.75.1",5001);
 			
 			ObjectInputStream in=new 
 					ObjectInputStream(server.getInputStream());
 			
 	     out =new ObjectOutputStream(server.getOutputStream());
-		  
+		 acc.setFlag(3); 
+	     out.writeObject(acc);
+	     out.flush();
 		    try {
-				c1=(Case) in.readObject();
+				clist=(ArrayList<Case>) in.readObject();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -82,15 +79,38 @@ public class Treatment extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		if(clist==null){
+			JFrame frm=new JFrame();
+			   JLabel lb1;
+			   JPanel j1;
+			    
+				j1=new JPanel();
+				frm.getContentPane().add(j1, BorderLayout.NORTH);
+				
+				lb1=new JLabel("目前无病人病例");  
+			
+			    j1.add(lb1);
+			    frm.setBounds(600, 100, 300, 250);//设置长宽大小
+				  frm.setVisible(true);//显示
+		}
+		else{
+		//clist1.add(cc);
 		cc=new Case();
-		cc.setPi(c1.getPi());
-		list.add(d1);list.add(d2);list.add(d3);list.add(d4);
-		cc.setDrug_list(list);
-		cc.setCharge(crg1);
-		
+		cc.setPi(clist.get(i).getPi());
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Treatment frame = new Treatment();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 	
-	}
+	}}}
 	
 	
 	
@@ -126,6 +146,7 @@ public class Treatment extends JFrame {
 		panel_1.add(med_na1);
 		med_na1.setColumns(10);
 		d1.setDrug_pinyin(med_na1.getText());
+		
 		 
 		JLabel label_2 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C11\u7684\u6570\u91CF");
 		panel_1.add(label_2);
@@ -134,7 +155,7 @@ public class Treatment extends JFrame {
 		panel_1.add(med_num1);
 		med_num1.setColumns(10);
 		d1.setDrug_count(Integer.parseInt( med_num1.getText()));
-		
+		list.add(d1);
 		JLabel label_5 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C12\u62FC\u97F3\u7801");
 		panel_1.add(label_5);
 		
@@ -142,6 +163,7 @@ public class Treatment extends JFrame {
 		panel_1.add(med_na2);
 		med_na2.setColumns(10);
 		d2.setDrug_pinyin(med_na2.getText());
+	
 		
 		JLabel label_6 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C12\u7684\u6570\u91CF");
 		panel_1.add(label_6);
@@ -150,6 +172,7 @@ public class Treatment extends JFrame {
 		panel_1.add(med_num2);
 		med_num2.setColumns(10);
 		d2.setDrug_count(Integer.parseInt(med_num2.getText()) );
+		list.add(d2);
 		
 		JLabel label_10 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C13\u62FC\u97F3\u7801");
 		panel_1.add(label_10);
@@ -159,6 +182,7 @@ public class Treatment extends JFrame {
 		panel_1.add(med_na3);
 		d3.setDrug_pinyin(med_na3.getText());
 		
+		
 		JLabel label_9 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C13\u7684\u6570\u91CF");
 		panel_1.add(label_9);
 		
@@ -166,7 +190,7 @@ public class Treatment extends JFrame {
 		med_num3.setColumns(10);
 		panel_1.add(med_num3);
 		d3.setDrug_count(Integer.parseInt(med_num3.getText()) );
-		
+		list.add(d3);
 		
 		JLabel label_11 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C14\u62FC\u97F3\u7801");
 		panel_1.add(label_11);
@@ -176,6 +200,7 @@ public class Treatment extends JFrame {
 		panel_1.add(med_na4);
 		d4.setDrug_pinyin(med_na4.getText());
 		
+		
 		JLabel label_12 = new JLabel("\u8BF7\u8F93\u5165\u836F\u54C14\u7684\u6570\u91CF");
 		panel_1.add(label_12);
 		
@@ -183,6 +208,7 @@ public class Treatment extends JFrame {
 		med_num4.setColumns(10);
 		panel_1.add(med_num4);
 		d4.setDrug_count(Integer.parseInt(med_num4.getText()) );
+		list.add(d4);cc.setDrug_list(list);
 		
 		JLabel label_3 = new JLabel("\u6536\u8D39\u9879\u76EE1\uFF1A\u533B\u751F\u770B\u75C5\u8D39 ");
 		panel_1.add(label_3);
@@ -194,6 +220,7 @@ public class Treatment extends JFrame {
 		panel_1.add(fee_num1);
 		fee_num1.setColumns(10);
 		crg1.setDocter_fee(Integer.parseInt(fee_num1.getText()));
+		cc.setCharge(crg1);
 		
 		JLabel label_8 = new JLabel("\u6536\u8D39\u9879\u76EE2\uFF1A\u836F\u54C1\u603B\u8D39 ");
 		panel_1.add(label_8);
@@ -251,24 +278,24 @@ public class Treatment extends JFrame {
 				 lb22=new JLabel("  病人名字：  ");
 				    j2.add(lb22);
 				
-			    lb2=new JLabel(c1.getPi().getName());
+			    lb2=new JLabel(clist.get(i).getPi().getName());
 			    j2.add(lb2);
 			    
 			    
 			    lb33=new JLabel(" 病人电话号码： ")	;
 			    j2.add(lb33);
-			    lb3=new JLabel(c1.getPi().getTel())	;
+			    lb3=new JLabel(clist.get(i).getPi().getTel())	;
 			    j2.add(lb3);
 			    
 			    lb44=new JLabel(" 病人年龄： ");
 			    j2.add(lb44);
 			    
-			    lb4=new JLabel(String.valueOf(c1.getPi().getYears()));
+			    lb4=new JLabel(String.valueOf(clist.get(i).getPi().getYears()));
 			    j2.add(lb4);
 			    
 			    lb55=new JLabel(" 病人的性别： ")	;
 			    j2.add(lb55);
-			    if(c1.getPi().isSex()){
+			    if(clist.get(i).getPi().isSex()){
 			    lb3=new JLabel("男")	;
 			    j2.add(lb3);}
 			    else {
@@ -291,7 +318,7 @@ public class Treatment extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			System.out.println("jinru");
+		
 			JFrame frm2;
 		    frm2=new JFrame();
 			   JLabel lb1;
@@ -300,7 +327,14 @@ public class Treatment extends JFrame {
 				j1=new JPanel();
 				frm2.getContentPane().add(j1, BorderLayout.NORTH);
 				try {
-					out.writeObject(cc);
+					clist1.add(cc);
+					if(i+1==clist.size()){
+						out.writeObject(clist1);
+						i=0;
+					}
+					else{
+						i++;
+					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

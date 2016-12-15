@@ -11,17 +11,24 @@ import java.awt.FlowLayout;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.DefaultComboBoxModel;
 
 public class Store extends JFrame {
-	private static Case cs1,cs2;
+	static int i=0;
+	private static ArrayList<Case> clist;
+	private static Case cs1;
+	private static Account acc;
+	private static Global_info med_info;
+	private static ArrayList<Drug_info> list;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
     private static JFrame frm;
@@ -32,17 +39,7 @@ public class Store extends JFrame {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Store frame = new Store();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		Socket server1=null;
+         Socket server1=null;
 		
 		try {
 			server1=new Socket("127.0.0",1200);
@@ -53,19 +50,40 @@ public class Store extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+	
 		in=new ObjectInputStream(server1.getInputStream());
 		
 		out=new ObjectOutputStream(server1.getOutputStream());
-		  
+		 acc.setFlag(4); 
+	     out.writeObject(acc);
+	     out.flush();
+		
 		try {
-			cs1=(Case) in.readObject();
+			med_info=(Global_info)in.readObject();//从服务器接受的全局信息
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+         list=med_info.getDrug_list();//从服务器接受的全局信息的药库信息序列
+		try {
+			clist=(ArrayList<Case>) in.readObject();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		cs1=clist.get(i);
+		
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Store frame = new Store();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		
 	}
@@ -74,6 +92,7 @@ public class Store extends JFrame {
 	 * Create the frame.
 	 */
 	public Store() {
+		int j=0;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -94,26 +113,21 @@ public class Store extends JFrame {
 		JLabel label_1 = new JLabel("\u836F\u54C11\u540D\u5B57\uFF1A ");
 		panel_1.add(label_1);
 		
-		JLabel Med_na1 = new JLabel("New label");
+		JLabel Med_na1 = new JLabel(cs1.getDrug_list().get(j).getDrug_name());
 		panel_1.add(Med_na1);
 		
-		JLabel label_2 = new JLabel(" \u8BF7\u9009\u62E9\u836F\u54C11\u6570\u91CF\uFF1A");
+		JLabel label_2 = new JLabel(" \u836F\u54C11\u6570\u91CF\uFF1A");
 		panel_1.add(label_2);
-		
-		JComboBox Med_nu1 = new JComboBox();
-		Med_nu1.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4"}));
-		panel_1.add(Med_nu1);
-		
-		JButton button = new JButton("\u786E\u5B9A");
+		int n=0;
+		JButton button = new JButton("\u68C0\u67E5\u8BE5\u836F\u54C1\u53CA\u5E93\u5B58");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				while(){
-				if()
-					
-				}
 				
-			}
-		});
+			}}
+		);
+		
+		JLabel label_4 = new JLabel("New label");
+		panel_1.add(label_4);
 		panel_1.add(button);
 		
 		JLabel label_3 = new JLabel("\u836F\u54C12\u540D\u5B57\uFF1A ");
@@ -122,14 +136,13 @@ public class Store extends JFrame {
 		JLabel Med_na2 = new JLabel("New label");
 		panel_1.add(Med_na2);
 		
-		JLabel label_5 = new JLabel(" \u8BF7\u9009\u62E9\u836F\u54C12\u6570\u91CF\uFF1A");
+		JLabel label_5 = new JLabel(" \u836F\u54C12\u6570\u91CF\uFF1A");
 		panel_1.add(label_5);
 		
-		JComboBox Med_nu2 = new JComboBox();
-		Med_nu2.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4"}));
-		panel_1.add(Med_nu2);
+		JLabel label_7 = new JLabel("New label");
+		panel_1.add(label_7);
 		
-		JButton button_1 = new JButton("\u786E\u5B9A");
+		JButton button_1 = new JButton("\u68C0\u67E5\u8BE5\u836F\u54C1\u53CA\u5E93\u5B58");
 		panel_1.add(button_1);
 		
 		JLabel label_6 = new JLabel("\u836F\u54C13\u540D\u5B57\uFF1A ");
@@ -138,14 +151,13 @@ public class Store extends JFrame {
 		JLabel Med_na3 = new JLabel("New label");
 		panel_1.add(Med_na3);
 		
-		JLabel label_8 = new JLabel(" \u8BF7\u9009\u62E9\u836F\u54C13\u6570\u91CF\uFF1A");
+		JLabel label_8 = new JLabel(" \u836F\u54C13\u6570\u91CF\uFF1A");
 		panel_1.add(label_8);
 		
-		JComboBox Med_nu3 = new JComboBox();
-		Med_nu3.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4"}));
-		panel_1.add(Med_nu3);
+		JLabel label_10 = new JLabel("New label");
+		panel_1.add(label_10);
 		
-		JButton button_2 = new JButton("\u786E\u5B9A");
+		JButton button_2 = new JButton("\u68C0\u67E5\u8BE5\u836F\u54C1\u53CA\u5E93\u5B58");
 		panel_1.add(button_2);
 		
 		JLabel label_9 = new JLabel("\u836F\u54C14\u540D\u5B57\uFF1A ");
@@ -154,14 +166,13 @@ public class Store extends JFrame {
 		JLabel Med_na4 = new JLabel("New label");
 		panel_1.add(Med_na4);
 		
-		JLabel label_11 = new JLabel(" \u8BF7\u9009\u62E9\u836F\u54C14\u6570\u91CF\uFF1A");
+		JLabel label_11 = new JLabel(" \u836F\u54C14\u6570\u91CF\uFF1A");
 		panel_1.add(label_11);
 		
-		JComboBox Med_nu4 = new JComboBox();
-		Med_nu4.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4"}));
-		panel_1.add(Med_nu4);
+		JLabel label_12 = new JLabel("New label");
+		panel_1.add(label_12);
 		
-		JButton button_3 = new JButton("\u786E\u5B9A");
+		JButton button_3 = new JButton("\u68C0\u67E5\u8BE5\u836F\u54C1\u53CA\u5E93\u5B58");
 		panel_1.add(button_3);
 		
 		JButton button_5 = new JButton("\u67E5\u770B\u75C5\u4EBA\u4FE1\u606F");
