@@ -25,13 +25,12 @@ import javax.swing.JButton;
 
 public class Treatment extends JFrame {
     static ArrayList<Case> clist;//接受服务器信息的clist
-    static ArrayList<Case> clist1;//发送修改服务器的clist1
-    static Case cc=null;//加在序列clist1的case对象
+    static ArrayList<Case> clist1;//发送的用于修改服务器的clist1
     static int sum;
     static int i=0;
-    static ArrayList<Drug_info> list;
-    static  private Drug_info d1,d2,d3,d4;
-    static Charge_info crg1;
+    static ArrayList<Drug_info> list;//用于修改clist1的医生开的药
+    static  private Drug_info d1,d2,d3,d4;//医生开的药
+    static Charge_info crg1;//医生的看病费
     private static ObjectOutputStream out;
     private static Account acc;
 	private JPanel contentPane;
@@ -52,8 +51,8 @@ public class Treatment extends JFrame {
 	
 		
 		int cishu=0;
-	    while(cishu++<4){
-	    	
+	    while(cishu<4){
+	    	cishu++;i=0;
 		Socket server=null;
 		try {
 			server =new Socket("192.168.75.1",5001);
@@ -63,7 +62,7 @@ public class Treatment extends JFrame {
 			
 	     out =new ObjectOutputStream(server.getOutputStream());
 		 acc.setFlag(3); 
-	     out.writeObject(acc);
+	     out.writeObject(acc);//告诉服务器客户端的类型
 	     out.flush();
 		    try {
 				clist=(ArrayList<Case>) in.readObject();
@@ -94,10 +93,10 @@ public class Treatment extends JFrame {
 				  frm.setVisible(true);//显示
 		}
 		else{
-		//clist1.add(cc);
-		cc=new Case();
-		cc.setPi(clist.get(i).getPi());
-
+			while(i+1<clist.size()){
+			clist1=clist;
+		list=clist1.get(i).getDrug_list();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -110,7 +109,7 @@ public class Treatment extends JFrame {
 		});
 		
 	
-	}}}
+	}}}}
 	
 	
 	
@@ -208,7 +207,7 @@ public class Treatment extends JFrame {
 		med_num4.setColumns(10);
 		panel_1.add(med_num4);
 		d4.setDrug_count(Integer.parseInt(med_num4.getText()) );
-		list.add(d4);cc.setDrug_list(list);
+		list.add(d4);clist1.get(i).setDrug_list(list);
 		
 		JLabel label_3 = new JLabel("\u6536\u8D39\u9879\u76EE1\uFF1A\u533B\u751F\u770B\u75C5\u8D39 ");
 		panel_1.add(label_3);
@@ -220,7 +219,7 @@ public class Treatment extends JFrame {
 		panel_1.add(fee_num1);
 		fee_num1.setColumns(10);
 		crg1.setDocter_fee(Integer.parseInt(fee_num1.getText()));
-		cc.setCharge(crg1);
+		
 		
 		JLabel label_8 = new JLabel("\u6536\u8D39\u9879\u76EE2\uFF1A\u836F\u54C1\u603B\u8D39 ");
 		panel_1.add(label_8);
@@ -235,6 +234,7 @@ public class Treatment extends JFrame {
 		JLabel lblNewLabel = new JLabel("\u603B\u8D39\u4E3A "+sum);
 		panel_1.add(lblNewLabel);
 		crg1.setDrug_fee(sum);
+		clist1.get(i).setCharge(crg1);
 		
 		JButton button_1 = new JButton("\u67E5\u770B\u75C5\u4EBA\u60C5\u51B5");
 		panel_1.add(button_1);
@@ -278,24 +278,24 @@ public class Treatment extends JFrame {
 				 lb22=new JLabel("  病人名字：  ");
 				    j2.add(lb22);
 				
-			    lb2=new JLabel(clist.get(i).getPi().getName());
+			    lb2=new JLabel(clist1.get(i).getPi().getName());
 			    j2.add(lb2);
 			    
 			    
 			    lb33=new JLabel(" 病人电话号码： ")	;
 			    j2.add(lb33);
-			    lb3=new JLabel(clist.get(i).getPi().getTel())	;
+			    lb3=new JLabel(clist1.get(i).getPi().getTel())	;
 			    j2.add(lb3);
 			    
 			    lb44=new JLabel(" 病人年龄： ");
 			    j2.add(lb44);
 			    
-			    lb4=new JLabel(String.valueOf(clist.get(i).getPi().getYears()));
+			    lb4=new JLabel(String.valueOf(clist1.get(i).getPi().getYears()));
 			    j2.add(lb4);
 			    
 			    lb55=new JLabel(" 病人的性别： ")	;
 			    j2.add(lb55);
-			    if(clist.get(i).getPi().isSex()){
+			    if(clist1.get(i).getPi().isSex()){
 			    lb3=new JLabel("男")	;
 			    j2.add(lb3);}
 			    else {
@@ -327,8 +327,8 @@ public class Treatment extends JFrame {
 				j1=new JPanel();
 				frm2.getContentPane().add(j1, BorderLayout.NORTH);
 				try {
-					clist1.add(cc);
-					if(i+1==clist.size()){
+					
+					if(i+1==clist1.size()){
 						out.writeObject(clist1);
 						i=0;
 					}
