@@ -8,7 +8,6 @@ public class Office implements Serializable {
 	private ArrayList<String> Doctor;
 	float Charge;
 	
-	
 	public Office(String name,ArrayList<String>Docter,float Charge){
 		this.Office_name=name;
 		this.Doctor=Docter;

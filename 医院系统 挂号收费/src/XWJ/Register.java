@@ -2,6 +2,8 @@ package XWJ;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -9,19 +11,42 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import all_class.*;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import javax.swing.JScrollPane;
 
 public class Register extends JFrame {
-
+	static int i=0;
+	private static Account account;
+    private static ObjectInputStream in;
+    private static ObjectOutputStream out;
+    private static JFrame frame;
 	private JPanel contentPane;
-
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{	
+      Socket server2=null;
+		try {
+			server2=new Socket("127.0.0",8000);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		in=new ObjectInputStream(server2.getInputStream());
+		out=new ObjectOutputStream(server2.getOutputStream());
+		account.setFlag(2); 
+	    out.writeObject(account);
+	    out.flush();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -62,11 +87,6 @@ public class Register extends JFrame {
 		panel_1.setBounds(0, 91, 434, 50);
 		contentPane.add(panel_1);
 		
-		JButton button = new JButton("\u9884\u7EA6\u6D4B\u8BD5\u7248");
-		panel_1.add(button);
-		ButtonHandler4 btnHandler4=new ButtonHandler4();
-		button.addActionListener(btnHandler4);
-		
 		JButton btnReg = new JButton("\u6302\u53F7");
 		panel_1.add(btnReg);
 		ButtonHandler1 btnHandler1=new ButtonHandler1();
@@ -96,10 +116,7 @@ public class Register extends JFrame {
 		panel_4.setBounds(0, 203, 434, 58);
 		contentPane.add(panel_4);
 		
-		JButton btnMed_Pay = new JButton("\u53D6\u836F\u7F34\u8D39");
-		panel_4.add(btnMed_Pay);
-		ButtonHandler3 btnHandler3=new ButtonHandler3();
-		btnMed_Pay .addActionListener(btnHandler3);
+		
 	    
 	}
 	
@@ -117,30 +134,9 @@ public class Register extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub  
-			Res_Pay frame = new Res_Pay();
+			Pay_Re_Med frame = new Pay_Re_Med();
 			frame.setVisible(true);
 		}	
 	}
 	
-	class ButtonHandler3 implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub  
-			Med_Pay frame = new Med_Pay();
-			frame.setVisible(true);
-		}	
-	}
-	
-	class ButtonHandler4 implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub  
-			Concol concol =new Concol();
-        	concol.produce();
-        	Res frame = new Res();
-			frame.setVisible(true);
-		}	
-	}
 }
