@@ -146,7 +146,7 @@ public class Handel {
 				ServerSocket server=null;
 				Socket socket=null;
 				try {
-					server=new ServerSocket(5000);
+					server=new ServerSocket(port);
 					socket=server.accept();
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;

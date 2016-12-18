@@ -265,7 +265,8 @@ public static void Writer_global_info(Global_info global_info) throws IOExceptio
 						else //开始来选择模块
 						{
 							switch (account.getFlag()) {
-							case 1: Administrator(); if(global_info_ad.equals(global_info)){
+							case 1: Administrator(); 
+							if(global_info_ad.equals(global_info)){
 								global_info=global_info_ad;
 								Writer_global_info(global_info);
 							}
