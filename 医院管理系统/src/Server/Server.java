@@ -104,7 +104,43 @@ public static void Writer_global_info(Global_info global_info) throws IOExceptio
 	}
 	
 }
-	public static void  Administrator(){
+public static void Adminstrator_get(){
+	new Thread(new Runnable() {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			ServerSocket server=null;
+			Socket socket=null;
+			try {
+				server=new ServerSocket(port);
+				socket=server.accept();
+				ObjectInputStream is=null;
+				ObjectOutputStream os=null;
+				is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
+		        os=new ObjectOutputStream(socket.getOutputStream());
+		        global_info_ad=(Global_info)is.readObject();
+		        if(!global_info_ad.equals(global_info)){
+					global_info=global_info_ad;
+					Writer_global_info(global_info);
+				}
+		        is.close();
+		        os.close();
+		        server.close();
+		        socket.close();
+		        
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}).start();
+}
+	public static void  Administrator_send(){
 	
 		new Thread(new Runnable() {
 			
@@ -123,11 +159,12 @@ public static void Writer_global_info(Global_info global_info) throws IOExceptio
 			        os=new ObjectOutputStream(socket.getOutputStream());
 			        os.writeObject(global_info);
 			        os.flush();
-			        global_info_ad=(Global_info) is.readObject();
+			        is.close();
+			        os.close();
+			        server.close();
+			        socket.close();
+			      
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -265,11 +302,9 @@ public static void Writer_global_info(Global_info global_info) throws IOExceptio
 						else //开始来选择模块
 						{
 							switch (account.getFlag()) {
-							case 1: Administrator(); 
-							if(global_info_ad.equals(global_info)){
-								global_info=global_info_ad;
-								Writer_global_info(global_info);
-							}
+							case 0: Adminstrator_get();//服务器获取信息并且写回
+							case 1: Administrator_send();//服务器发送信息
+							
 								break;
 							case 2:handel.registration_Thread();handel.Charge_sum(); break;
 							case 3:handel.docter_hander();break;

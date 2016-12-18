@@ -60,12 +60,14 @@ public class administrator extends JFrame {
 					ObjectOutputStream os=null;
 					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
 			        os=new ObjectOutputStream(socket.getOutputStream());
-			        os.writeObject(account);
+			        os.writeObject(account);//报头
 			        os.flush();
-			        global_info=(Global_info)is.readObject();
+			        global_info=(Global_info)is.readObject();//获取信息
+			        
+			        
 			        os.close();
 			        is.close();
-			        server.close();
+			       
 			        socket.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -108,7 +110,12 @@ public class administrator extends JFrame {
 	 */
 	public administrator(Account account) {
 		this.account=account;
-		Link link=new Link(account);
+		get_global_info();
+		Link link=new Link(account);//link的起源
+		link.setAccount(account);
+		link.setGlobal_info(global_info);//客户端的初始化
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -133,7 +140,7 @@ public class administrator extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							Hander_Account frame = new Hander_Account(global_info,account);
+							Handel_Account frame = new Handel_Account(link);
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -153,6 +160,9 @@ public class administrator extends JFrame {
 		JButton button = new JButton("\u79D1\u5BA4\u7BA1\u7406");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				Handel_Office frame = new Handel_Office(link);
+				frame.setVisible(true);
 			}
 		});
 		panel_1.add(button);
@@ -160,12 +170,9 @@ public class administrator extends JFrame {
 		JButton button_2 = new JButton("\u836F\u54C1\u7BA1\u7406");
 		panel_1.add(button_2);
 		
-		JButton button_3 = new JButton("\u4FE1\u606F\u67E5\u8BE2");
-		panel_1.add(button_3);
-		
 		JButton btnTu = new JButton("\u9000\u51FA");
 		panel_1.add(btnTu);
-		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{panel_1, label, button_1, panel, button, button_2, button_3}));
+		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{panel_1, label, button_1, panel, button, button_2}));
 	}
 
 	private class SwingAction extends AbstractAction {
