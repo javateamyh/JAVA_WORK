@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Account implements Serializable  {
 	private String ID;//所有账号
 	private String Code;
-	private int flag;//  0：管理员写回  1：管理员获取信息  2：收费人员 3：医生 4：药师 5： 院长  6：病人注册 7:大屏幕显示 
+	private int flag;//   1：管理员 2：收费人员 3：医生 4：药师 5： 院长  6：病人注册 7:大屏幕显示 
 	private int pass;//-1表示验证失败，否则为验证成功
 	
 	

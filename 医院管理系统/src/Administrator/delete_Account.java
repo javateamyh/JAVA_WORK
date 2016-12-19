@@ -23,11 +23,9 @@ public class delete_Account extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
-   private static Global_info global_info;
-   
 
-	public delete_Account(Link link) {
-		global_info=link.getGlobal_info();
+
+	public delete_Account(Account account) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -70,14 +68,10 @@ public class delete_Account extends JFrame {
 				if(textField.getText().equals(accounts.get(i).getID()))
 				{
 					f=true;
-					break;
 				}
 			}
 				if(f)
 				{
-					accounts.remove(i);
-					global_info.setAccount_list(accounts);
-					link.setGlobal_info(global_info);
 					
 				}
 				else

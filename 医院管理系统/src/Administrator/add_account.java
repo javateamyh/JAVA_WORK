@@ -34,9 +34,9 @@ private  static Global_info global_info;
 	/**
 	 * Create the frame.
 	 */
-	public add_account(Link link) {
-		this.global_info=link.getGlobal_info();
-		this.account=link.getAccount();
+	public add_account(Account account) {
+		this.global_info=global_info;
+		this.account=account;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -112,7 +112,11 @@ private  static Global_info global_info;
 					Account account2=new Account(lblNewLabel_1.getText(), lblNewLabel_2.getText(), 1);
 					account_list.add(account2);
 					global_info.setAccount_list(account_list);
-					link.setGlobal_info(global_info);//     ¼ÇÂ¼
+					Link link=new Link(account.getID(),account.getCode(),account.getFlag());
+					link.setGlobal_info(global_info);
+					link.Connection();
+					
+					
 				}
 					
 				
