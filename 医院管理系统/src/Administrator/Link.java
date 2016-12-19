@@ -21,6 +21,14 @@ public class Link {
 	this.account=account;
 	}
 
+	public static Account getAccount() {
+		return account;
+	}
+
+	public static void setAccount(Account account) {
+		Link.account = account;
+	}
+
 	public static void Connection(){
 		new Thread(new Runnable() {
 			
