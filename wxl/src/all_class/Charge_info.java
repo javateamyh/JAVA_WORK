@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Charge_info implements Serializable {
 	private float Registration_fee;//挂号的费用
-	private float Docter_fee;
+	private float Docter_fee;//医生的划费
 	private float Drug_fee;//药品的费用
 	private float Sum_fee;
 	boolean Pay;

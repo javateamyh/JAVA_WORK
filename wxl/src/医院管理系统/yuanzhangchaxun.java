@@ -33,7 +33,7 @@ public class yuanzhangchaxun {
 
 	private JFrame frame;
 	static Global_info global_info=new Global_info();
-	static Account account=new Account("","",1);
+	static Account account=new Account("","",5);
 	static ArrayList<Office> office=global_info.getCount_office();
 	static ArrayList<Drug_info> drug=global_info.getDrug_list();
     

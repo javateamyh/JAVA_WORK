@@ -8,6 +8,11 @@ public class Global_info implements Serializable {
 private ArrayList<Office> Count_office;//所有科室的数组
 private ArrayList <Account> Account_list;//账号的数组
 private ArrayList<Drug_info> Drug_list;//药品的数量
+public Global_info( ArrayList<Office> Count_office,ArrayList<Account> Account_list,ArrayList<Drug_info>Drug_list){
+	this.Count_office=Count_office;
+	this.Account_list=Account_list;
+	this.Drug_list=Drug_list;
+}
 public ArrayList<Office> getCount_office() {
 	return Count_office;
 }
