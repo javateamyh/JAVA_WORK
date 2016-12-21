@@ -7,7 +7,7 @@ public class Charge_info implements Serializable {
 	private float Docter_fee;//医生的划费
 	private float Drug_fee;//药品的费用
 	private float Sum_fee;
-	boolean Pay;
+	boolean Pay;//是否已经完成收费
 	public float getRegistration_fee() {
 		return Registration_fee;
 	}

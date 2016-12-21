@@ -1,9 +1,8 @@
 package 医院管理系统;
 /*可以查询统计每个科室的挂号量和总金额（可以选择生成饼图统计）；
  * 查询药房各个药品的库存量；
- * 查询统计每个医生的就诊数量和金额；
  */
-
+//从服务器端要得到ArrayList<Office>，ArrayList<Drug_info> 不需要向服务器传递信息
 import java.awt.EventQueue;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,14 +27,17 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.JTextPane;
 import java.awt.List;
+import javax.swing.JTextArea;
+import javax.swing.JTable;
+import java.awt.Label;
 
 public class yuanzhangchaxun {
 
 	private JFrame frame;
-	static Global_info global_info=new Global_info();
-	static Account account=new Account("","",5);
-	static ArrayList<Office> office=global_info.getCount_office();
-	static ArrayList<Drug_info> drug=global_info.getDrug_list();
+	//static Global_info global_info=new Global_info();
+	static Account account=new Account("","",5);//院长的账号信息
+	static ArrayList<Office> office_list;
+	static ArrayList<Drug_info> drug_list;
     
 	/**
 	 * Launch the application.
@@ -60,10 +62,12 @@ public class yuanzhangchaxun {
 				ObjectOutputStream out=new ObjectOutputStream(server.getOutputStream());//由套接对象输出
 				
 				account.setFlag(6);
-				out.writeObject(account.getFlag());
+				out.writeObject(account.getFlag());//向服务器发送标志
 				out.flush();
 				try{
-					account=(Account) in.readObject();
+					//从服务器接收科室数组和药品信息数组
+					office_list=(ArrayList<Office>) in.readObject();
+					drug_list=(ArrayList<Drug_info>) in.readObject();
 					out.close();
 					in.close();
 					server.close();
@@ -79,25 +83,9 @@ public class yuanzhangchaxun {
 				e1.printStackTrace();
 			}
 			}
+		}
 		
-		String doctorname[]=new String [office.size()];
-		String officename[]=new String[office.size()];
 		
-		for(int i=0;i<office.size();i++)
-					{
-					officename[i]=office.get(i).getOffice_name();
-					doctorname[i]=office.get(i).getDocter_name();
-					}
-		/****************************还要修改的************************************/
-		for(int i=0;i<office.size();i++)//挂号量和总金额
-		  System.out.println(officename[i]+"的挂号量为：    总金额为：");
-		
-		for(int i=0;i<drug.size();i++)//药的库存为
-			  System.out.println(drug.get(i).getDrug_name() +"的库存为："+drug.get(i).getDrug_count());
-		
-		for(int i=0;i<drug.size();i++)//医生的就诊数量和金额
-			  System.out.println(doctorname[i]+"的就诊量为：     金额为：");
-	}
 
 	/**
 	 * Create the application.
@@ -120,37 +108,64 @@ public class yuanzhangchaxun {
 		JLabel label = new JLabel("\u8BF7\u9009\u62E9\u6240\u8981\u67E5\u8BE2\u7684\u5185\u5BB9\uFF1A");
 		panel.add(label);
 		
-		String [] s={"每个科室的挂号量和总金额","药房各个药品的库存量","每个医生的就诊数量和金额"};
-		JComboBox comboBox = new JComboBox();
+		 String officename[]=new String[office_list.size()];//存放所有科室的名字
+			for(int i=0;i<office_list.size();i++)
+			{
+			officename[i]=office_list.get(i).getOffice_name();
+			}
+		
+		String [] s={"每个科室的挂号量和总金额","药房各个药品的库存量"};
+		JComboBox comboBox = new JComboBox(s);//可供院长选择功能
+		comboBox.setSelectedIndex(-1);
 		panel.add(comboBox);
+		int key=comboBox.getSelectedIndex();//记录院长所选择的功能
 		
-		
-		
-		int key=comboBox.getSelectedIndex();
-		switch(key)
+		String drugname[]=new String[drug_list.size()];//存放所有药的名字
+		for(int i=0;i<drug_list.size();i++)
 		{
-		case 0:{
-			JRadioButton radioButton = new JRadioButton("\u751F\u6210\u997C\u72B6\u56FE");
+		drugname[i]=drug_list.get(i).getDrug_name();
+		}
+
+		switch(key)//根据院长所选的功能呈现不同的页面
+		{
+		case 0:{//每个科室的挂号量和总金额
+			Label label_1 = new Label("\u9009\u62E9\u6240\u8981\u67E5\u8BE2\u7684\u79D1\u5BA4\uFF1A");//选择科室标签
+			panel.add(label_1);
+			JRadioButton radioButton = new JRadioButton("\u751F\u6210\u997C\u72B6\u56FE");//是否生成饼状图的button
 			panel.add(radioButton);
+			JComboBox comboBox_1 = new JComboBox(officename);//选择科室的下拉框
+			panel.add(comboBox_1);
+			comboBox_1.setSelectedIndex(-1);
+			int key1=comboBox_1.getSelectedIndex();//记录所要查询的科室
+			
 			if(radioButton.isSelected())//每个科室的挂号量和总金额（选择生成饼图统计）
 			{
 				
 			}
 			else
-			{
+			{//显示所选中科室的总金额
 				JTextPane textPane = new JTextPane();
-				textPane.setText("");
+				textPane.setText("总金额为："+office_list.get(key1).getCharge());
 				panel.add(textPane);
 				
+				//for(int i=0;i<office_list.size();i++)//每个科室挂号量和总金额
+					  //System.out.println(officename[i]+"的挂号量为：总金额为："+office_list.get(i).getCharge());
 			}
 		}
 		case 1://查询药房各个药品的库存量；
 		{
-			
-		}
-		case 2://查询统计每个医生的就诊数量和金额；
-		{
-			
+			JLabel lblNewLabel = new JLabel("\u9009\u62E9\u6240\u8981\u67E5\u8BE2\u7684\u836F\u54C1\u7684\u540D\u79F0\uFF1A");
+			panel.add(lblNewLabel);
+			JComboBox comboBox_2 = new JComboBox(drugname);//存放药名的下拉框
+			panel.add(comboBox_2);
+			comboBox.setSelectedIndex(-1);
+	        int key2=comboBox.getSelectedIndex();//记录所选择的药品名
+	        JTextPane textPane_1 = new JTextPane();
+			textPane_1.setText("总金额为："+drug_list.get(key2).getDrug_count());//显示对应的金额
+			panel.add(textPane_1);
+	        
+			//for(int i=0;i<drug_list.size();i++)//药的库存为
+				  //System.out.println(drug_list.get(i).getDrug_name() +"的库存为："+drug_list.get(i).getDrug_count());
 		}
 		}
 	}

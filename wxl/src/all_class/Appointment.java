@@ -5,6 +5,13 @@ import java.io.Serializable;
 public class Appointment implements Serializable  {
 	private int  Appoint_time;
 	private Office App_office;
+	private String Docter_name;//预约的医生
+	public String getDocter_name() {
+		return Docter_name;
+	}
+	public void setDocter_name(String docter_name) {
+		Docter_name = docter_name;
+	}
 	private boolean Appoint;
 	public int  getAppoint_time() {
 		return Appoint_time;

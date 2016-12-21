@@ -1,5 +1,7 @@
 package 医院管理系统;
-
+//输入病人基本信息（如姓名性别年龄联系方式等等），预约科室，时间。
+//从服务器端读入ArrayList<Office> office_list
+//向服务器送appointment
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -21,6 +23,8 @@ import javax.swing.JButton;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
+import javax.swing.ComboBoxModel;
+
 import java.awt.event.ActionListener;
 import javax.swing.JRadioButton;
 import javax.swing.JList;
@@ -39,6 +43,7 @@ import java.awt.event.ItemEvent;
 
 
 public class kehuyuyueSwing extends JFrame {
+;
 	static ArrayList<Office> office_list;
 	private JPanel contentPane;
 	private JTextField textField;//姓名
@@ -50,15 +55,38 @@ public class kehuyuyueSwing extends JFrame {
 	Patient_info patient=new Patient_info();
 	Appointment appointment=new Appointment();
 	Case patient_case=new Case();
-	Office office=new Office();
+	int i,j;//i记录所中的科室在数组中的位置，j记录所中的医生在数组中的位置
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
-
-			
+		/*while(true){//向服务器发送请求
+			Socket server=null;
+			try{
+				server =new Socket("127.0.0",2303);
+					
+				ObjectInputStream in=new ObjectInputStream(server.getInputStream());//由套接对象输入
+				ObjectOutputStream out=new ObjectOutputStream(server.getOutputStream());//由套接对象输出
+				
+				account.setFlag(6);
+				out.writeObject(account.getFlag());
+				out.flush();
+				try{
+					office_list=(ArrayList<Office>) in.readObject();
+				}catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			}*/
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -69,6 +97,7 @@ public class kehuyuyueSwing extends JFrame {
 				}
 			}
 		});
+		
 		while(true){//向服务器发送请求
 			Socket server=null;
 			try{
@@ -156,40 +185,52 @@ public class kehuyuyueSwing extends JFrame {
 		
 		JLabel lblNewLabel_4 = new JLabel("\u9884\u7EA6\u79D1\u5BA4\uFF1A");
 		panel_1.add(lblNewLabel_4);
+				
 		
-		Global_info global=new Global_info();
-		global.setCount_office(office_list);
+		String officename[]=new String[office_list.size()];//存放所有科室的名字
+
 		
-		String officename[]=new String[office_list.size()];
-		String doctorname[]=new String[office_list.size()];;
-		
-		for(int i=0;i<office_list.size();i++)
+		for(i=0;i<office_list.size();i++)
 					{
 					officename[i]=office_list.get(i).getOffice_name();
-					doctorname[i]=office_list.get(i).getDocter_name();
 					}
-		JComboBox comboBox = new JComboBox(officename);
+		JComboBox comboBox = new JComboBox(officename);//所有科室名字的下拉框
 		comboBox.setSelectedIndex(office_list.size());
 		
-		office.setOffice_name(officename[comboBox.getSelectedIndex()]);
-		
+		//office.setOffice_name(officename[comboBox.getSelectedIndex()]);
 		/*JComboBox petList = new JComboBox(petStrings);
 
- petList.setSelectedIndex(4);
+            petList.setSelectedIndex(4);
 
- petList.addActionListener(this);*/
+          petList.addActionListener(this);*/
+		
+		
+		//由所选中的科室名字找到相应的科室信息。
+		for(i=0;i<office_list.size();i++)
+		{
+			if(office_list.get(i).getOffice_name()==officename[comboBox.getSelectedIndex()])
+		//office_list.get(i)选定的科室类;
+			{
+
+				break;
+			}
+		
+		}
+		appointment.setApp_office(office_list.get(i));
+		String doctorname[]=new String[office_list.get(i).getDocter_name().size()];
+		for(int j=0;j<office_list.get(i).getDocter_name().size();j++)
+			doctorname[j]=office_list.get(i).getDocter_name().get(j).toString();//得到科室对应的医生的名字
 
 		
 		comboBox.setToolTipText("\u9009\u62E9\u79D1\u5BA4");
 		panel_1.add(comboBox);
 		
-		JComboBox comboBox_1 = new JComboBox(doctorname);
+		JComboBox comboBox_1 = new JComboBox(doctorname);//供选择的医生的名字
 		comboBox_1.setToolTipText("\u9009\u62E9\u533B\u751F");
 		panel_1.add(comboBox_1);/*****************************/
-		comboBox_1.setSelectedIndex(office_list.size());
-		
-        office.setDocter_name(doctorname[comboBox_1.getSelectedIndex()]);
-		appointment.setApp_office(office);
+		comboBox_1.setSelectedIndex(office_list.get(i).getDocter_name().size());
+       // office.setDocter_name(doctorname[comboBox_1.getSelectedIndex()]);
+       //所选的医生的名字为doctorname[comboBox1.getSelectedIndex()
 		
 		
 		
@@ -225,7 +266,7 @@ public class kehuyuyueSwing extends JFrame {
 				//appointment.setApp_office(officename[]);/****************************/
 				
 				
-				appointment.setAppoint_time(textField_5.toString());
+				appointment.setAppoint_time(Integer.parseInt(textField_5.toString()));
 				appointment.setAppoint(true);
 				patient_case.setApp(appointment);
 				//向服务器发送消息
@@ -260,6 +301,52 @@ public class kehuyuyueSwing extends JFrame {
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
 		public void actionPerformed(ActionEvent e) {
+			Socket server=null;
+			try {
+				server =new Socket("127.0.0",2303);
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			try {
+				ObjectInputStream in=new ObjectInputStream(server.getInputStream());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}//由套接对象输入
+			ObjectOutputStream out;
+			try {
+				out = new ObjectOutputStream(server.getOutputStream());
+				account.setFlag(6);
+				try {
+					out.writeObject(account.getFlag());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					out.writeObject(appointment);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					out.flush();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}//由套接对象输出
+			
+			
+
+}
 		}
-	}
 }
