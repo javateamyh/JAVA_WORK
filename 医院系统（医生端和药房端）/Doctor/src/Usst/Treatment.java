@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JMenuBar;
 
 public class Treatment extends JFrame {
     static ArrayList<Case> clist;//接受服务器信息的clist
@@ -78,6 +79,7 @@ public class Treatment extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+
 		if(clist==null){
 			JFrame frm=new JFrame();
 			   JLabel lb1;
@@ -92,8 +94,36 @@ public class Treatment extends JFrame {
 			    frm.setBounds(600, 100, 300, 250);//设置长宽大小
 				  frm.setVisible(true);//显示
 		}
+		
 		else{
+			int j=0;
 			while(i+1<clist.size()){
+				
+			while(clist.get(j).getApp().getAppoint_time()>60&&
+					clist.get(j).getApp().getAppoint_time()==0)
+			{
+				
+				if(j+1==clist.size()){
+					j++;
+					break;
+				}
+				
+				j++;
+			}
+			if(j!=clist.size()){
+				Case c_forchange;
+				c_forchange=clist.get(j);
+				int k1=0;
+				int k2=j;
+				for(k1=0;k1<k2;k1++)
+				{
+				clist.set(j, clist.get(j-1));
+				j--;
+				}
+				
+				clist.set(0, c_forchange);
+			}
+			
 			clist1=clist;
 		list=clist1.get(i).getDrug_list();
 		
@@ -106,10 +136,11 @@ public class Treatment extends JFrame {
 					e.printStackTrace();
 				}
 			}
-		});
+		});}
+				
 		
 	
-	}}}}
+	}}}
 	
 	
 	
@@ -123,6 +154,17 @@ public class Treatment extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(500, 200, 545, 335);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JButton button_2 = new JButton("\u67E5\u770B\u75C5\u4EBA\u60C5\u51B5");
+	    ButtonHandler1 btnHandler=new ButtonHandler1();
+			button_2.addActionListener(btnHandler);
+		menuBar.add(button_2);
+		
+		
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -236,76 +278,16 @@ public class Treatment extends JFrame {
 		crg1.setDrug_fee(sum);
 		clist1.get(i).setCharge(crg1);
 		
-		JButton button_1 = new JButton("\u67E5\u770B\u75C5\u4EBA\u60C5\u51B5");
-		panel_1.add(button_1);
-		ButtonHandler0 btnHandler1=new ButtonHandler0();
-		button_1.addActionListener(btnHandler1);
-		
 		
 		
 		
 		
 		JButton button = new JButton("\u786E\u5B9A\u53D1\u9001");
 		panel_1.add(button);
-	    ButtonHandler1 btnHandler=new ButtonHandler1();
-		button.addActionListener(btnHandler);
-		
-		
-		
-		
-	}
 	
-	class ButtonHandler0 implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			JFrame frm1;
-		    frm1=new JFrame();
-			   JLabel lb1,lb2,lb22,lb3,lb33,lb4,lb44,lb5,lb55;
-			   JPanel j1,j2,j3;
-			    
-				j1=new JPanel();
-				j2=new JPanel();
-				j3=new JPanel();
-				
-				frm1.getContentPane().add(j1, BorderLayout.NORTH);
-				frm1.getContentPane().add(j2, BorderLayout.CENTER);
-				j2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-				lb1=new JLabel("病人的信息：  ");  
-				j1.add(lb1);
-				
-				 lb22=new JLabel("  病人名字：  ");
-				    j2.add(lb22);
-				
-			    lb2=new JLabel(clist1.get(i).getPi().getName());
-			    j2.add(lb2);
-			    
-			    
-			    lb33=new JLabel(" 病人电话号码： ")	;
-			    j2.add(lb33);
-			    lb3=new JLabel(clist1.get(i).getPi().getTel())	;
-			    j2.add(lb3);
-			    
-			    lb44=new JLabel(" 病人年龄： ");
-			    j2.add(lb44);
-			    
-			    lb4=new JLabel(String.valueOf(clist1.get(i).getPi().getYears()));
-			    j2.add(lb4);
-			    
-			    lb55=new JLabel(" 病人的性别： ")	;
-			    j2.add(lb55);
-			    if(clist1.get(i).getPi().isSex()){
-			    lb3=new JLabel("男")	;
-			    j2.add(lb3);}
-			    else {
-			    	 lb3=new JLabel("女");
-					    j2.add(lb3);
-			    }
-			
-			    frm1.setBounds(600, 400, 200, 90);//设置长宽大小
-				frm1.setVisible(true);//显示
-		}
+		
+		
+		
 		
 	}
 	
