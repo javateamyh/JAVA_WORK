@@ -8,6 +8,7 @@ public class Office implements Serializable {
 	private ArrayList<String> Doctor;
 	float Charge;
 	
+	
 	public Office(String name,ArrayList<String>Docter,float Charge){
 		this.Office_name=name;
 		this.Doctor=Docter;
@@ -15,6 +16,18 @@ public class Office implements Serializable {
 		
 	}
 	
+	public float getCharge() {
+		return Charge;
+	}
+
+	public void setCharge(float charge) {
+		Charge = charge;
+	}
+
+	public ArrayList<String> getDoctor() {
+		return Doctor;
+	}
+
 	public void setDoctor(ArrayList<String> doctor) {
 		Doctor = doctor;
 	}

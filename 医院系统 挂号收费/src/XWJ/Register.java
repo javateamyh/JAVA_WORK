@@ -29,24 +29,32 @@ public class Register extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	public static void get_global_info(){
+		 new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Socket server2=null;
+				try {
+					server2=new Socket("127.0.0",8000);
+					ObjectInputStream is=null;
+					ObjectOutputStream os=null;
+					in=new ObjectInputStream(server2.getInputStream());
+					out=new ObjectOutputStream(server2.getOutputStream());
+					account.setFlag(2); 
+				    out.writeObject(account);
+				    out.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();		 
+		 
+	 }
 	public static void main(String[] args) throws IOException{	
-      Socket server2=null;
-		try {
-			server2=new Socket("127.0.0",8000);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		in=new ObjectInputStream(server2.getInputStream());
-		out=new ObjectOutputStream(server2.getOutputStream());
-		account.setFlag(2); 
-	    out.writeObject(account);
-	    out.flush();
-		
+		get_global_info();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -63,6 +71,7 @@ public class Register extends JFrame {
 	 * Create the frame.
 	 */
 	public Register() {
+		get_global_info();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -88,9 +97,13 @@ public class Register extends JFrame {
 		contentPane.add(panel_1);
 		
 		JButton btnReg = new JButton("\u6302\u53F7");
+		btnReg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Res frame = new Res();
+				frame.setVisible(true);
+			}
+		});
 		panel_1.add(btnReg);
-		ButtonHandler1 btnHandler1=new ButtonHandler1();
-		btnReg .addActionListener(btnHandler1);
 		
 		JLabel label = new JLabel("");
 		label.setBounds(174, 22, 54, 15);
@@ -108,9 +121,13 @@ public class Register extends JFrame {
 		contentPane.add(panel_3);
 		
 		JButton btnReg_Pay = new JButton("\u6302\u53F7\u6536\u8D39");
+		btnReg_Pay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Pay_Re_Med frame = new Pay_Re_Med();
+				frame.setVisible(true);
+			}
+		});
 		panel_3.add(btnReg_Pay);
-		ButtonHandler2 btnHandler2=new ButtonHandler2();
-		btnReg_Pay .addActionListener(btnHandler2);
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(0, 203, 434, 58);
@@ -119,24 +136,4 @@ public class Register extends JFrame {
 		
 	    
 	}
-	
-	class ButtonHandler1 implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub  
-			Res frame = new Res();
-			frame.setVisible(true);
-		}	
-	}
-	class ButtonHandler2 implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub  
-			Pay_Re_Med frame = new Pay_Re_Med();
-			frame.setVisible(true);
-		}	
-	}
-	
 }
