@@ -50,7 +50,7 @@ public class Store extends JFrame {
 			cishu++;
         Socket server1=null;
 		try {
-			server1=new Socket("127.0.0",1200);
+			server1=new Socket("10.40.255.254",5000);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
