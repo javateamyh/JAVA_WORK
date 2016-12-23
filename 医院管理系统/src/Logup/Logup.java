@@ -131,14 +131,14 @@ public class Logup extends JFrame {
 						
 						case 1:  administrator administrator=new administrator(account_back,socket);
 						administrator.setVisible(true);break;
-						case 2:Pay_Re_Med pay_Re_Med=new Pay_Re_Med(account_back);
+						case 2:Pay_Re_Med pay_Re_Med=new Pay_Re_Med(account_back,socket);
 						case 3:    {
 							Treatment treatment=new Treatment(account_back,socket);
 							treatment.setVisible(true);
 							break;
 							
 						}
-						case 4:{ Store store=new Store(account_back);break; }
+						case 4:{ Store store=new Store(account_back,socket);break; }
 						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun(account_back);
 						break;
 						}

@@ -22,6 +22,8 @@ import javax.swing.JScrollPane;
 public class Register extends JFrame {
 	static int i=0;
 	private static  Account account;
+	private static Socket socket;
+	private static Global_info global_info;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
     private static JFrame frame;
@@ -32,35 +34,11 @@ public class Register extends JFrame {
 	
 	
 	public static void get_global_info(){
-		 new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Socket server2=null;
-				try {
-				
-					ipconfig ip=new ipconfig();
-					server2=new Socket(ip.getHost(),ip.getPort());
-				
-					ObjectInputStream is=null;
-					ObjectOutputStream os=null;
-					in=new ObjectInputStream(server2.getInputStream());
-					out=new ObjectOutputStream(server2.getOutputStream());
-					account.setFlag(2); 
-				    out.writeObject(account);
-				    out.flush();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}).start();		 
-		 
+				TCP tcp=new TCP();
+				global_info=tcp.get_global_info(); 
 	 }
 	
-	public Register(Account account) {
-		this.account=account;
+	public Register() {
 		
 		get_global_info();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,7 +68,7 @@ public class Register extends JFrame {
 		JButton btnReg = new JButton("\u6302\u53F7");
 		btnReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Res frame = new Res(account);
+				Res frame = new Res();//นาบล
 				frame.setVisible(true);
 			}
 		});
@@ -114,7 +92,7 @@ public class Register extends JFrame {
 		JButton btnReg_Pay = new JButton("\u6302\u53F7\u6536\u8D39");
 		btnReg_Pay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Pay_Re_Med frame = new Pay_Re_Med(account);
+				Pay_Re_Med frame = new Pay_Re_Med(account,socket);
 				frame.setVisible(true);
 			}
 		});

@@ -28,7 +28,7 @@ public class Res extends JFrame {
 	static int d=0;
 	private static Case case1;//病例
 	private static ArrayList<Case> Register1;//接收给挂号人员的病人信息
-	private static Global_info info;//接收全局信息
+	private static Global_info global_info;//接收全局信息
 	private static ArrayList<Office> officelist;//接收全局信息中的科室
 	//private static ArrayList<Case> WaitDoctor;//记录每个医生排队
 	private static ArrayList<WaitOffice> waitOfficelist;//存放一个科室的所有医生排队情况
@@ -46,6 +46,7 @@ public class Res extends JFrame {
 	private static JLabel lb4;
 	private static JLabel lb6;
 	private JPanel contentPane;
+	private static Socket socket;
 	private static Account account;
 
 	/**
@@ -56,27 +57,11 @@ public class Res extends JFrame {
 	 * Create the frame.
 	 */
 	public void run() {
-		// TODO Auto-generated method stub
-		try {
-			Register1=(ArrayList<Case>)in.readObject();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		try {
-			info=(Global_info)in.readObject();//从服务器接受科室的所有信息
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		officelist=info.getCount_office();
+		TCP tcp=new TCP();
+		Register1=tcp.GetCase_toReg();
+	    global_info=tcp.get_global_info();
+		officelist=global_info.getCount_office();
 	}
 	
 	public void makewait()//初始化所有科室和医生队列
@@ -94,30 +79,13 @@ public class Res extends JFrame {
 	
 	
 	public void write(){
-	new Thread(new Runnable() {
-		
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			try {
-				Socket socket=new Socket("127.0.0",8000);
-				ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
-				os.writeObject(Register1);
-				os.flush();
-				os.close();
-				socket.close();
-					
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
+	
+			TCP tcp=new TCP();
+			tcp.SetCase_toDocter(Register1);
 		}
-	}).start();}
 
-	public Res(Account account) {
-		this.account=account;
+
+	public Res() {
 		boolean g=false;
 		if(!g)//第一次获取服务器信息
 		{
@@ -237,7 +205,7 @@ public class Res extends JFrame {
 		btnSub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				i++;
-				Res frame = new Res(account);
+				Res frame = new Res();
 				frame.setVisible(true);
 			}
 		});
@@ -251,7 +219,7 @@ public class Res extends JFrame {
 		JButton btnUP = new JButton("\u8FD4\u56DE\u4E0A\u4E00\u7EA7");
 		btnUP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Register frame = new Register(account);
+				Register frame = new Register();
 				frame.setVisible(true);
 			}
 		});

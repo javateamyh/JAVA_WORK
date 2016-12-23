@@ -27,6 +27,7 @@ public class Pay_Re_Med extends JFrame {
 	private static JLabel lblPay;
 	private static JLabel lblName;
 	static int i=0;
+	private static Socket socket;
 	private static Account account;
 	 static String host="127.0.0.1";
 	 static int port=5000;
@@ -54,11 +55,9 @@ public class Pay_Re_Med extends JFrame {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				Socket socket=null;
+				
 				try {
-					ipconfig ip=new ipconfig();
-					socket=new Socket(ip.getHost(),ip.getPort());
+					
 					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
 					os.writeObject(Register_Charged);
 					os.flush();
@@ -74,8 +73,9 @@ public class Pay_Re_Med extends JFrame {
 			}
 		}).start();}
 	
-	public Pay_Re_Med(Account account) {
+	public Pay_Re_Med(Account account,Socket socket) {
 		this.account=account;
+		this.socket=socket;
 		boolean R=false;
 		if(!R)//第一次获取服务器信息
 		{
@@ -144,7 +144,7 @@ public class Pay_Re_Med extends JFrame {
 		JButton btnNewButton = new JButton("BUTTON");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Register frame = new Register(account);
+				Register frame = new Register();
 				frame.setVisible(true);
 			}
 		});
@@ -158,7 +158,7 @@ public class Pay_Re_Med extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				i++;
-				Pay_Re_Med frame = new Pay_Re_Med(account);
+				Pay_Re_Med frame = new Pay_Re_Med(account,socket);
 				frame.setVisible(true);
 			}
 		});
