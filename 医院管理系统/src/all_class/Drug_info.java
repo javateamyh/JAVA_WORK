@@ -7,8 +7,17 @@ public class Drug_info implements Serializable {
 	private String Drug_name;
 	private String Drug_pinyin;//药品的拼音简码
 	private float Drug_price;
-	private int Drug_count;//药品的数量
+	private int Drug_count;//药品的数量(库存总量)
+	private int Drug_use;//医生开的药的数量
 	
+	public int getDrug_use() {
+		return Drug_use;
+	}
+
+	public void setDrug_use(int drug_use) {
+		Drug_use = drug_use;
+	}
+
 	public Drug_info(String name,String pinyin,float price ,int count) {
 	Drug_name=name;
 	Drug_pinyin=pinyin;

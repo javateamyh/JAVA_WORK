@@ -6,7 +6,9 @@ import java.util.ArrayList;
 public class Office implements Serializable {
 	private String Office_name;
 	private ArrayList<String> Doctor;
-	float Charge;
+    private float Charge;
+   
+	
 	
 	
 	public Office(String name,ArrayList<String>Docter,float Charge){

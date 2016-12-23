@@ -45,16 +45,33 @@ public class Handel_Office extends JFrame {
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		
+		JLabel lblNewLabel = new JLabel("New label");
+		
 		JComboBox comboBox = new JComboBox();
 		int i;
 		for(i=0;i<offices.size();i++)
 		{
 			comboBox.addItem(offices.get(i).getOffice_name());
 		}
+		JComboBox comboBox_1 = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String name=comboBox.getSelectedItem().toString();
-			
+				int i;
+				for(i=0;i<offices.size();i++)
+				{
+					if(name.equals(offices.get(i).getOffice_name()))break;
+				}
+				
+			lblNewLabel.setText(String.valueOf(offices.get(i).getCharge()));
+		
+         comboBox_1.removeAllItems();
+            for(int j=0;j<offices.get(i).getDoctor().size();j++)
+       {
+	    comboBox_1.addItem(offices.get(i).getDoctor().get(j));
+       }
+	
+		
 			}
 		});
 		panel_1.setLayout(new GridLayout(0, 2, 0, 0));
@@ -66,14 +83,11 @@ public class Handel_Office extends JFrame {
 		JLabel label_2 = new JLabel("\u79D1\u5BA4\u6536\u8D39\uFF1A");
 		panel_1.add(label_2);
 		
-		JLabel lblNewLabel = new JLabel("New label");
+	
 		panel_1.add(lblNewLabel);
 		
 		JLabel label_3 = new JLabel("\u79D1\u5BA4\u533B\u751F\uFF1A");
 		panel_1.add(label_3);
-		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		panel_1.add(lblNewLabel_1);
 		
 		JButton btnNewButton = new JButton("\u9000\u51FA");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -81,6 +95,9 @@ public class Handel_Office extends JFrame {
 				setVisible(false);
 			}
 		});
+		
+	
+		panel_1.add(comboBox_1);
 		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("\u4FEE\u6539");

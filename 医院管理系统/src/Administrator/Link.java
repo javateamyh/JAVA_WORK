@@ -13,7 +13,7 @@ import all_class.Global_info;
 
 public class Link {
 	
-	private static Account account;
+	private static Account account;//´æ´¢±¾»úµÄÕËºÅ
 	private static Global_info global_info;
 	static int port=5000;
 	public   Link(Account account) {

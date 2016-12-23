@@ -7,7 +7,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Administrator.administrator;
+import Check.yuanzhangchaxun;
+import Large_Sreen.Screen;
+import Register_Charge.Pay_Re_Med;
+import Store.Store;
+import Treatment.Treatment;
 import all_class.Account;
+import all_class.ipconfig;
+import register.kehuyuyueSwing;
 
 import javax.swing.JLabel;
 import java.awt.GridLayout;
@@ -23,6 +31,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.nio.channels.NonWritableChannelException;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 
@@ -33,6 +42,7 @@ public class Logup extends JFrame {
 	private JTextField textField_1;
 	static String host="127.0.0.1";
 	static int port=5000;
+	static Account account_back;
 
 	/**
 	 * Launch the application.
@@ -80,12 +90,12 @@ public class Logup extends JFrame {
 		panel_1.add(label_2);
 		
 		textField = new JTextField();
-		textField.setBounds(162, 27, 171, 31);
+		textField.setBounds(171, 27, 171, 31);
 		panel_1.add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(162, 87, 171, 31);
+		textField_1.setBounds(171, 87, 171, 31);
 		panel_1.add(textField_1);
 		textField_1.setColumns(10);
 		
@@ -96,15 +106,15 @@ public class Logup extends JFrame {
 		
 		JButton button = new JButton("\u767B\u5F55");
 		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {//账号的登录
 				String name,code;
-				Account account_back;
 				name=textField.getText();
 				code=textField_1.getText();
 				Account account=new Account(name, code, 100);
-				Socket socket;
+				Socket socket=null;
 				try {
-					socket = new Socket(host, port);
+					ipconfig ip=new ipconfig();
+					socket=new Socket(ip.getHost(),ip.getPort());
 					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
 					os.writeObject(account);
 					os.flush();
@@ -117,18 +127,22 @@ public class Logup extends JFrame {
 					}
 					else 
 					{
-						switch (account.getFlag()-100) {
-						case 0:
-						case 1:  break;
-						case 2:
-						case 3:
-						case 4:
-						case 5:
+						switch (account_back.getFlag()-100) {
 						
-							
-
-						default:
+						case 1:  administrator administrator=new administrator(account_back,socket);
+						administrator.setVisible(true);break;
+						case 2:Pay_Re_Med pay_Re_Med=new Pay_Re_Med(account_back);
+						case 3:    {
+							Treatment treatment=new Treatment(account_back,socket);
+							treatment.setVisible(true);
 							break;
+							
+						}
+						case 4:{ Store store=new Store(account_back);break; }
+						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun(account_back);
+						break;
+						}
+							
 						}
 					}
 				} catch (IOException e1) {
@@ -152,17 +166,89 @@ public class Logup extends JFrame {
 		JButton btnNewButton = new JButton("\u75C5\u4EBA\u9884\u7EA6");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {  //病人预约
+				
+				Socket socket=null;
+                Account account=new Account("key","key", 6);
+				try {
+					ipconfig ip=new ipconfig();
+					socket = new Socket(ip.getHost(), ip.getPort());
+					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+					os.writeObject(account);
+					os.flush();
+					ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+					account_back=(Account)is.readObject();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(account_back.getFlag()==-1)
+				{
+					lblNewLabel.setVisible(true);
+					lblNewLabel.setText("对不起，密码错误");
+				}
+				
+				else
+				{
+				
+				try {
+					kehuyuyueSwing ke=new kehuyuyueSwing(account_back,socket);
+					ke.setVisible(true);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				}	
+				
 			}
 		});
-		btnNewButton.setBounds(130, 203, 93, 23);
+		btnNewButton.setBounds(126, 196, 93, 23);
 		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("\u5927\u5C4F\u5E55\u663E\u793A");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {//大屏幕显示
+				Socket socket=null;
+				Account account=new Account("key","key", 7);
+				try {
+					ipconfig ip=new ipconfig();
+					socket = new Socket(ip.getHost(), ip.getPort());
+					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+					os.writeObject(account);
+					os.flush();
+					ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+					account_back=(Account)is.readObject();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(account_back.getFlag()==-1)
+				{
+					lblNewLabel.setVisible(true);
+					lblNewLabel.setText("对不起，密码错误");
+				}
+				
+				else
+				{
+					Screen screen=new Screen(account_back);
+				}
+				
 			}
 		});
-		btnNewButton_1.setBounds(250, 203, 93, 23);
+		btnNewButton_1.setBounds(240, 196, 93, 23);
 		panel_1.add(btnNewButton_1);
 		
 		

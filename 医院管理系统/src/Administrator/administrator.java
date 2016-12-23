@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import all_class.Account;
 import all_class.Global_info;
+import all_class.ipconfig;
 import all_class.statistic_info;
 
 import javax.swing.JLabel;
@@ -36,6 +37,7 @@ public class administrator extends JFrame {
 	 private static Account account;
 	 private static Link link;
 	 private JPanel contentPane;
+	 private static Socket socket;
 	 private final Action action = new SwingAction();
 	 static int port=5000;
 	 private JButton button_1;
@@ -46,29 +48,18 @@ public class administrator extends JFrame {
 	 * @return 
 	 */
 	 public static void get_global_info(){
-		 new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				
-				Socket socket=null;
+
+
 				try {
-					socket=new Socket(host,port);
-					
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
-					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
 			        os=new ObjectOutputStream(socket.getOutputStream());
 			        os.writeObject(account);//报头
 			        os.flush();
+			 
+			        is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
 			        global_info=(Global_info)is.readObject();//获取信息
-			        
-			        
-			        os.close();
-			        is.close();
-			       
-			        socket.close();
+			  
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -79,36 +70,13 @@ public class administrator extends JFrame {
 				
 				
 				
-			}
-		}).start();
+		
 		 
 		 
 		 
 	 }
-	
-	 
-	public static void main(String[] args) {
-		
-		
-		get_global_info();//获取服务器的全局信息
-		
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					administrator frame = new administrator(account);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public administrator(Account account) {
+	public administrator(Account account,Socket socket) {
+		this.socket=socket;
 		this.account=account;
 		get_global_info();
 		Link link=new Link(account);//link的起源
@@ -183,32 +151,25 @@ public class administrator extends JFrame {
 		JButton button_3 = new JButton("\u540C\u6B65");
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				link.getAccount().setFlag(0);
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
+				            account.setFlag(100);
 						try {
-							Socket socket=new Socket(host, port);
-							ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+							Socket socket_write=new Socket(ipconfig.getHost(), ipconfig.getPort());
+							ObjectOutputStream os=new ObjectOutputStream(socket_write.getOutputStream());
 							os.writeObject(account);
 							os.flush();
+							global_info=link.getGlobal_info();//部分更新全局信息
 							os.writeObject(global_info);
 							os.flush();
 							os.close();
-							socket.close();
-							
-							
-						} catch (IOException e) {
+							socket_write.close();
+							 
+						} catch (IOException e1) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							e1.printStackTrace();
 						}
 						
-						
-					}
-				}).start();
-				link.getAccount().setFlag(1);//回复为起始状态
+			
+				link.getAccount().setFlag(101);//回复为起始状态
 				
 			}
 		});
@@ -226,5 +187,11 @@ public class administrator extends JFrame {
 	}
 	public JButton getButton_1() {
 		return button_1;
+	}
+
+
+	public void adm() {
+		// TODO Auto-generated method stub
+		
 	}
 }

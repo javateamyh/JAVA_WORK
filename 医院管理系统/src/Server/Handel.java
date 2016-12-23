@@ -15,7 +15,8 @@ import all_class.statistic_info;
 
 public class Handel {
 	public static Global_info global_info;
-	
+	public static Storage storage;
+	private static  Socket socket;
 	 private static ArrayList<Case> Register=new ArrayList<Case>();//给挂号人员的
 	 private static ArrayList<Case> Register_to_Docter=new ArrayList<Case>();//给医生的信息
 	 private static ArrayList<Case> Register_Charged=new ArrayList<Case>();//用于挂号端的收费
@@ -23,22 +24,19 @@ public class Handel {
 	 static int port=5000;
 	 
 	 
-	 public  Handel(Global_info go) {
-		global_info=go;
+	 public  Handel(Storage storage,Socket socket) {
+		 this.storage=storage;
+		global_info=storage.getGlobal_info();
+		this.socket=socket;
 	}
+	 
+	 
+	
 	 
 	 //关于病人门诊挂号收费模块，同时接收处理后的信息
 	public static void registration_Thread(){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				ServerSocket server=null;
-				Socket socket=null;
 				try {
-					server=new ServerSocket(port);
-					socket=server.accept();
+				
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
 					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
@@ -55,44 +53,41 @@ public class Handel {
 			        
 			        is.close();
 			        os.close();
-			        socket.close();
-			        server.close();
+			       
+			      
 			      
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-			}
-		}).start();
+	
 	}
 	   //关于医生模块
 	
-	public static void docter_hander(){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
+	public static void docter_hander(){//1.发送全局变量2.发送病人的表单
+		
 				// TODO Auto-generated method stub
-				ServerSocket server=null;
-				Socket socket=null;
+				
 				try {
-					server=new ServerSocket(port);
-					socket=server.accept();
+				
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
-					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
+					
 			        os=new ObjectOutputStream(socket.getOutputStream());
-					os.writeObject(Register_to_Docter);
+			        os.writeObject(global_info);
+					os.writeObject(Register_to_Docter);//送给医生的信息
 					os.flush();
 					Register_to_Docter.clear();
 					try {
-						Register_Charged.addAll((ArrayList<Case>)is.readObject());
+						is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+						Register_Charged.addAll((ArrayList<Case>)is.readObject());//接收的序列
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
+				os.close();
 				
 					
 				} catch (IOException e) {
@@ -100,22 +95,15 @@ public class Handel {
 					e.printStackTrace();
 				}
 				
-			}
-		}).start();
-
+	
 	}
 	//大屏幕显示信息
 	public static void Screen_info(){
-	new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
+	
 				// TODO Auto-generated method stub
-				ServerSocket server=null;
-				Socket socket=null;
+				
 				try {
-					server=new ServerSocket(port);
-					socket=server.accept();
+				
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
 					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
@@ -125,63 +113,54 @@ public class Handel {
 					Register_to_Docter.clear();
 			is.close();
 			os.close();
-			socket.close();
-			server.close();
+			
+		
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-			}
-		}).start();
+
 	}
 	 //关于注册模块的处理
 	public static void register_Thread(){
-		new Thread(new Runnable(){
-
-			@Override
-			public void run() {
+	
 				// TODO Auto-generated method stub
-				ServerSocket server=null;
-				Socket socket=null;
+			
 				try {
-					server=new ServerSocket(port);
-					socket=server.accept();
+					
+					
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
-					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
-			        os=new ObjectOutputStream(socket.getOutputStream());
 					try {
-						Case patient=(Case)is.readObject();
+						
+						 os=new ObjectOutputStream(socket.getOutputStream());
+						os.writeObject(global_info);
+						os.flush();
+						is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+/*直接发送病人病例*/		Case patient=(Case)is.readObject();
 						Register.add(patient);	
+					
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
 					
+				
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-			}
-			
-		}).start();
+	
 	}
 //关于收费信息
 public static void Charge_sum(){
-	new Thread(new Runnable() {
-		
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			ServerSocket server=null;
-			Socket socket=null;
 			try {
-				server=new ServerSocket(port);
-				socket=server.accept();
+				
 				ObjectInputStream is=null;
 				ObjectOutputStream os=null;
 				is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
@@ -197,8 +176,8 @@ public static void Charge_sum(){
 				}
 		        is.close();
 		        os.close();
-		        socket.close();
-		        server.close();
+		        
+		      
 		        
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -206,50 +185,39 @@ public static void Charge_sum(){
 			}
 			
 			
-		}
-	}).start();
+
 }
 
-	public static void Druger_info(){//给药房端的信息
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
+	public static void Druger_info() throws ClassNotFoundException{//给药房端的信息
+
 				// TODO Auto-generated method stub
-				ServerSocket server=null;
-				Socket socket=null;
+			
 				try {
-					server=new ServerSocket(port);
-					socket=server.accept();
+					
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
 					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
 			        os=new ObjectOutputStream(socket.getOutputStream());
 			        os.writeObject(Register_get_Drug);
 			        os.flush();
+			        global_info=(Global_info)is.readObject();
+			        storage.setGlobal_info(global_info);
 			        is.close();
 			        os.close();
-			        socket.close();
-			        server.close();
+			     
+			   
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-			}
-		}).start();
+
 	}
 	public  static void  statistic_Thread() {  //返回统计信息
-		new Thread(new Runnable() {
+	
 			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				ServerSocket server=null;
-				Socket socket=null;
+			
 				try {
-					server=new ServerSocket(port);
-					socket=server.accept();
+					
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
 					is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
@@ -259,14 +227,13 @@ public static void Charge_sum(){
 			        os.flush();
 			        is.close();
 			        os.close();
-			        server.close();
-			        socket.close();
+			
+			    
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-		}).start();
+
 		
 	}
 	
