@@ -20,8 +20,6 @@ import java.awt.event.ActionEvent;
 public class Pay_Re_Med extends JFrame {
 	private static Case case2;
 	private static ArrayList<Case> Register_Charged;//用于挂号端的收费
-    private static ObjectInputStream in;
-    private static ObjectOutputStream out;
 	private JPanel contentPane;
 	static int j=0;
 	private static JLabel lblPay;
@@ -29,77 +27,38 @@ public class Pay_Re_Med extends JFrame {
 	static int i=0;
 	private static Socket socket;
 	private static Account account;
-	 static String host="127.0.0.1";
-	 static int port=5000;
-	/**
-	 * Launch the application.
-	 */
-	public void runing() {
-		// TODO Auto-generated method stub
-		try {
-			Register_Charged=(ArrayList<Case>)in.readObject();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public void write(){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				try {
-					
-					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
-					os.writeObject(Register_Charged);
-					os.flush();
-					os.close();
-					socket.close();
-						
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-			}
-		}).start();}
+	 private  static Global_info global_info;
 	
-	public Pay_Re_Med(Account account,Socket socket) {
-		this.account=account;
-		this.socket=socket;
-		boolean R=false;
-		if(!R)//第一次获取服务器信息
+	 static int page=0;
+	 
+	 public static void up_load()
+	 {
+		 TCP tcp=new TCP();
+		 tcp.setCase_toStore(Register_Charged);
+	 }
+	 public static void GetData()
 		{
-			runing();
-		    R=true;
+			TCP tcp =new TCP();
+			global_info=tcp.get_global_info();
+			Register_Charged=tcp.GetCase_toCharge();	
 		}
-		
-		boolean Q=false;
-		if(Q)//一次接收到的病例已经全部处理完，接收下一次
-		{   
-			write();
-			runing();
+	public Pay_Re_Med() {
+		if(i==0)
+		{
+			GetData();
 		}
-		case2=Register_Charged.get(i);
-		case2.getPi().getName();
-		case2.getCharge().getSum_fee();
-		lblName.setText("病人需要缴费 " +case2.getPi().getName());
-		lblPay.setText("病人需要缴费 " +case2.getCharge().getSum_fee());
-		case2.getCharge().setPay(true);
-		//处理完成的病人都将修改写回服务器
 		if(i<Register_Charged.size())
 		{
-			Q=true;
+			case2=Register_Charged.get(i);
+			case2.getPi().getName();
+			case2.getCharge().getSum_fee();
+			lblName.setText("病人需要缴费 " +case2.getPi().getName());
+			lblPay.setText("病人需要缴费 " +case2.getCharge().getSum_fee());
+			case2.getCharge().setPay(true);
 		}
+		
+		
+		//处理完成的病人都将修改写回服务器
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -137,18 +96,21 @@ public class Pay_Re_Med extends JFrame {
 		panel_4.setBounds(0, 139, 424, 35);
 		contentPane.add(panel_4);
 		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setVisible(false);
+		panel_4.add(lblNewLabel);
+		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBounds(0, 216, 424, 35);
 		contentPane.add(panel_5);
 		
-		JButton btnNewButton = new JButton("BUTTON");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Register frame = new Register();
-				frame.setVisible(true);
+		JButton button_1 = new JButton("\u9000\u51FA");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
 			}
 		});
-		panel_5.add(btnNewButton);
+		panel_5.add(button_1);
 		
 		JPanel panel_6 = new JPanel();
 		panel_6.setBounds(0, 184, 424, 35);
@@ -157,9 +119,21 @@ public class Pay_Re_Med extends JFrame {
 		JButton button = new JButton("\u786E\u8BA4\u7F34\u8D39");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				i++;
-				Pay_Re_Med frame = new Pay_Re_Med(account,socket);
-				frame.setVisible(true);
+				if(i<Register_Charged.size())
+				{
+					dispose();
+					Pay_Re_Med frame = new Pay_Re_Med();
+					frame.setVisible(true);
+					i++;
+				}
+				else 
+				{
+					lblNewLabel.setVisible(true);
+					lblNewLabel.setText("所有人员收费完成");
+					up_load();
+				}
+			
+				
 			}
 		});
 		panel_6.add(button);

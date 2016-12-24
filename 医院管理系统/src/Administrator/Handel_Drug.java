@@ -57,7 +57,13 @@ public class Handel_Drug extends JFrame {
 		JLabel lblNewLabel = new JLabel("\u836F\u54C1\u540D\u79F0\uFF1A");
 		panel_1.add(lblNewLabel);
 		
-		JComboBox comboBox = new JComboBox();
+		String [] name=new String[drug_infos.size()];
+		for(int i=0;i<drug_infos.size();i++)
+		{
+			name[i]=drug_infos.get(i).getDrug_name();
+		}
+		JLabel lblNewLabel_3 = new JLabel("New label");
+		JComboBox comboBox = new JComboBox(name);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			String name=comboBox.getSelectedItem().toString();
@@ -72,11 +78,6 @@ public class Handel_Drug extends JFrame {
 			textField_2.setText(String.valueOf(drug_infos.get(i).getDrug_count()));
 			}
 		});
-		int i;
-		for(i=0;i<drug_infos.size();i++)
-		{
-			comboBox.addItem(drug_infos.get(i).getDrug_name());
-		}
 		panel_1.add(comboBox);
 		
 		JLabel lblNewLabel_1 = new JLabel("\u7B80\u7801\uFF1A");
@@ -84,13 +85,15 @@ public class Handel_Drug extends JFrame {
 		
 		JButton btnNewButton = new JButton("\u836F\u54C1\u4FE1\u606F\u4FEE\u6539");
 		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {//修改药品信息
 			if(indox!=-1)
 			{
 				drug_infos.get(indox).setDrug_price(Float.parseFloat(textField_1.getText()));
 				drug_infos.get(indox).setDrug_count(Integer.parseInt(textField_2.getText()));
 				global_info.setDrug_list(drug_infos);
 				link.setGlobal_info(global_info);
+				lblNewLabel_3.setVisible(true);
+				lblNewLabel_3.setText("药品信息修改后成功");
 			}
 			}
 		});
@@ -121,6 +124,13 @@ public class Handel_Drug extends JFrame {
 			}
 		});
 		panel_1.add(button_2);
+		
+		JPanel panel_2 = new JPanel();
+		contentPane.add(panel_2, BorderLayout.SOUTH);
+		
+		
+		lblNewLabel_3.setVisible(false);
+		panel_2.add(lblNewLabel_3);
 	}
 
 }

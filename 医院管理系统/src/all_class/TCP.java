@@ -27,7 +27,7 @@ public class TCP {
 			//Ô¿³×
 			ObjectInputStream is=null;
 			is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-			Global_info global_info=(Global_info)is.readObject();
+			global_info=(Global_info)is.readObject();
 			is.close();
 			os.close();
 			os1.close();

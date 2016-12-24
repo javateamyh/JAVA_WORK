@@ -10,6 +10,7 @@ public class Patient_info implements Serializable  {
 	public String getName() {
 		return Name;
 	}
+	
 	public void setName(String name) {
 		Name = name;
 	}

@@ -32,15 +32,23 @@ public class Register extends JFrame {
 	 * Launch the application.
 	 */
 	
+	public static void frist_set(){
+		try {
+			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			os.writeObject(account);
+			os.flush();
+			os.close();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("无法连接服务器");
+		}
+	}
 	
-	public static void get_global_info(){
-				TCP tcp=new TCP();
-				global_info=tcp.get_global_info(); 
-	 }
-	
-	public Register() {
-		
-		get_global_info();
+	public Register(Account account,Socket socket) {
+		this.account=account;
+		this.socket=socket;
+	    frist_set();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -68,8 +76,8 @@ public class Register extends JFrame {
 		JButton btnReg = new JButton("\u6302\u53F7");
 		btnReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Res frame = new Res();//挂号
-				frame.setVisible(true);
+				Registration registration=new Registration();
+				registration.setVisible(true);
 			}
 		});
 		panel_1.add(btnReg);
@@ -92,7 +100,7 @@ public class Register extends JFrame {
 		JButton btnReg_Pay = new JButton("\u6302\u53F7\u6536\u8D39");
 		btnReg_Pay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Pay_Re_Med frame = new Pay_Re_Med(account,socket);
+				Pay_Re_Med frame = new Pay_Re_Med();
 				frame.setVisible(true);
 			}
 		});
