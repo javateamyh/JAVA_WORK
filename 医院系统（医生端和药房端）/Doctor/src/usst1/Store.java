@@ -1,4 +1,4 @@
-package Usst;
+package usst1;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
