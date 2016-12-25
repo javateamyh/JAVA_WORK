@@ -33,9 +33,7 @@ public class Treatment extends JFrame {
     static  private Drug_info d1,d2;//医生开的药
     static  private  Charge_info crg;
  
-    private static Account acc;
-    private static Global_info glo_info;//(从服务器接受的全局变量  主要接受药库信息
-   
+    private static Account acc;   
 	private JPanel contentPane;
 	private JTextField med_na1;
 	private JTextField med_num1;
@@ -150,6 +148,39 @@ public class Treatment extends JFrame {
 		JButton button_2 = new JButton("\u67E5\u770B\u75C5\u4EBA\u60C5\u51B5");
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JFrame frm;
+			    frm=new JFrame();
+				   JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
+				   JPanel j1,j2;
+				    
+					j1=new JPanel();
+					frm.getContentPane().add(j1, BorderLayout.NORTH);
+					lb1=new JLabel("该病人信息");
+					
+					
+					j2=new JPanel();
+					frm.getContentPane().add(j1, BorderLayout.CENTER);
+					lb2=new JLabel("该病人姓名");
+					lb3=new JLabel(clist1.get(i).getPi().getName());
+					
+					lb4=new JLabel("该病人年龄");
+					lb5=new JLabel(String.valueOf(clist1.get(i).getPi().getYears()));
+					
+
+					lb6=new JLabel("该病人电话");
+					lb7=new JLabel(clist1.get(i).getPi().getTel());
+					
+					
+				    j1.add(lb1);
+					j2.add(lb2);
+					j2.add(lb3);
+					j2.add(lb4);
+					j2.add(lb5);
+					j2.add(lb6);
+					j2.add(lb7);
+					
+				    frm.setBounds(600, 400, 200, 90);//设置长宽大小
+					  frm.setVisible(true);//显示
 				
 				
 				
@@ -203,7 +234,11 @@ public class Treatment extends JFrame {
 				{if(med_na1.getText().equals(glo_info.getDrug_list().get(gcount)))
 						{sum=sum+glo_info.getDrug_list().get(gcount).getDrug_price()*
 					       Integer.parseInt( med_num1.getText());
-						d1.setDrug_pinyin(med_na1.getText());
+						d1=new Drug_info(glo_info.getDrug_list().get(gcount).getDrug_pinyin(),
+								glo_info.getDrug_list().get(gcount).getDrug_name(),
+								glo_info.getDrug_list().get(gcount).getDrug_price(), 
+								glo_info.getDrug_list().get(gcount).getDrug_count()-
+								Integer.parseInt( med_num1.getText()));
 						d1.setDrug_use(Integer.parseInt( med_num1.getText()));
 						list.add(d1);break;
 						};
@@ -226,9 +261,8 @@ public class Treatment extends JFrame {
 		med_num2 = new JTextField();
 		panel_1.add(med_num2);
 		med_num2.setColumns(10);
-		d2.setDrug_count(Integer.parseInt(med_num2.getText()) );
-		list.add(d2);
-		clist1.get(i).setDrug_list(list);
+		
+	
 		
 		JButton button_3 = new JButton("\u786E\u5B9A");
 		button_3.addActionListener(new ActionListener() {
@@ -237,10 +271,15 @@ public class Treatment extends JFrame {
 				for(gcount=0;gcount<glo_info.getDrug_list().size();gcount++)
 				{if(med_na2.getText().equals(glo_info.getDrug_list().get(gcount)))
 						{sum=sum+glo_info.getDrug_list().get(gcount).getDrug_price()*
-					       Integer.parseInt( med_num1.getText());
-						d2.setDrug_pinyin(med_na2.getText());
+					       Integer.parseInt( med_num2.getText());
+						d2=new Drug_info(glo_info.getDrug_list().get(gcount).getDrug_pinyin(),
+								glo_info.getDrug_list().get(gcount).getDrug_name(),
+								glo_info.getDrug_list().get(gcount).getDrug_price(), 
+								glo_info.getDrug_list().get(gcount).getDrug_count()-
+								Integer.parseInt( med_num2.getText()));
 						d2.setDrug_use(Integer.parseInt( med_num2.getText()));
 						list.add(d2);break;
+					 
 						};
 				}
 				
@@ -276,7 +315,8 @@ public class Treatment extends JFrame {
 		panel_1.add(lblNewLabel);
 		
 		crg.setDrug_fee(sum);
-		
+		clist1.get(i).setCharge(crg);
+		clist1.get(i).setDrug_list(list);
 		
 		
 		

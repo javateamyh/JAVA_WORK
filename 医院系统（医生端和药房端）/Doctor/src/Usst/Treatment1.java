@@ -80,6 +80,8 @@ public class Treatment1 extends JFrame {
 				int cishu=0;
 			    while(cishu<4){
 			    	cishu++;
+			    	clist=new ArrayList<Case>();
+					clist1=new ArrayList<Case>() ;
 				Socket server=null;
 				try {
 					server =new Socket("10.40.255.254",5000);
