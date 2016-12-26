@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import all_class.Account;
 import all_class.Global_info;
+import all_class.TCP;
 
 import javax.swing.JLabel;
 import java.awt.GridLayout;
@@ -22,7 +23,6 @@ public class delete_Account extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	private JTextField textField_1;
    private static Global_info global_info;
    
 
@@ -53,11 +53,8 @@ public class delete_Account extends JFrame {
 		textField.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setVisible(false);
 		panel_1.add(lblNewLabel);
-		
-		textField_1 = new JTextField();
-		panel_1.add(textField_1);
-		textField_1.setColumns(10);
 		
 		JButton btnNewButton = new JButton("\u786E\u8BA4");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -73,11 +70,14 @@ public class delete_Account extends JFrame {
 					break;
 				}
 			}
+			lblNewLabel.setVisible(true);
 				if(f)
-				{
+				{   
 					accounts.remove(i);
 					global_info.setAccount_list(accounts);
 					link.setGlobal_info(global_info);
+					lblNewLabel.setVisible(true);
+					lblNewLabel.setText("É¾³ý³É¹¦");
 					
 				}
 				else
@@ -89,7 +89,7 @@ public class delete_Account extends JFrame {
 		});
 		panel_1.add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("\u53D6\u6D88");
+		JButton btnNewButton_1 = new JButton("\u9000\u51FA");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

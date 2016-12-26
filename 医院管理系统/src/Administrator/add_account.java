@@ -97,12 +97,12 @@ static int key=1;
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Account> account_list=global_info.getAccount_list();
 				int i;
-				boolean f=true;
+				boolean f=false;
 				
 				for(i=0;i<account_list.size();i++)
 				{
-					if(account_list.get(i).getID().equals(textField.getText()));
-					{f=false ;break;}
+					if(account_list.get(i).getID().equals(textField.getText()))
+					{f=true;break;}
 				}
 				if(f)
 					{
@@ -113,10 +113,11 @@ static int key=1;
 				{
 					lblNewLabel_2.setVisible(true);
 					lblNewLabel_2.setText("ÕËºÅ×¢²á³É¹¦");
-					Account account2=new Account(lblNewLabel_1.getText(), lblNewLabel_2.getText(), key);
+					Account account2=new Account(textField.getText(), textField_1.getText(), key);
 					account_list.add(account2);
 					global_info.setAccount_list(account_list);
 					link.setGlobal_info(global_info);//     ¼ÇÂ¼
+					
 				}
 					
 				

@@ -63,8 +63,6 @@ public class TCP {
 		os1.close();
 		os2.close();
 		socket.close();
-		
-		
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

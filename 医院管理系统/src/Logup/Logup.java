@@ -13,7 +13,9 @@ import Large_Sreen.Screen;
 import Register_Charge.Pay_Re_Med;
 import Register_Charge.Register;
 import Store.Store;
+import Store.store1;
 import Treatment.Treatment;
+import Treatment.Treatment1;
 import all_class.Account;
 import all_class.ipconfig;
 import register.kehuyuyueSwing;
@@ -134,12 +136,12 @@ public class Logup extends JFrame {
 						administrator.setVisible(true);break;
 						case 2:Register register=new Register(account,socket);register.setVisible(true);break;
 						case 3:    {
-							Treatment treatment=new Treatment(account_back,socket);
+							Treatment1 treatment=new Treatment1(account_back,socket);
 							treatment.setVisible(true);
 							break;
 							
 						}
-						case 4:{ Store store=new Store(account_back,socket);break; }
+						case 4:{ store1 store=new store1(account_back,socket);break; }
 						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun();
 						break;
 						}
@@ -249,7 +251,7 @@ public class Logup extends JFrame {
 				
 				else
 				{
-					Screen screen=new Screen(account_back);
+					Screen screen=new Screen(account_back,socket);
 				}
 				
 			}

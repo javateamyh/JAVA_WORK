@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import all_class.Account;
 import all_class.Global_info;
+import all_class.TCP;
 import all_class.ipconfig;
 import all_class.statistic_info;
 
@@ -17,6 +18,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -39,47 +41,38 @@ public class administrator extends JFrame {
 	 private JPanel contentPane;
 	 private static Socket socket;
 	 private final Action action = new SwingAction();
-	 static int port=5000;
 	 private JButton button_1;
-	 static String host="127.0.0.1";
 
 	/**
 	 * Launch the application.
 	 * @return 
 	 */
-	 public static void get_global_info(){
-
-
-				try {
-					ObjectInputStream is=null;
-					ObjectOutputStream os=null;
-			        os=new ObjectOutputStream(socket.getOutputStream());
-			        os.writeObject(account);//报头
-			        os.flush();
-			 
-			        is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
-			        global_info=(Global_info)is.readObject();//获取信息
-			  
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				
+	 public static void first_set(){
+		 ObjectOutputStream os;
+		try {
+			os = new ObjectOutputStream(socket.getOutputStream());
+			 os.writeObject(account);
+			 os.flush();
+		     os.close();
+		     socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("初始化错误");
+		}
+	
 		
-		 
-		 
-		 
+	 }
+	 public static void get_global_info(){
+		TCP tcp=new TCP();
+		global_info=tcp.get_global_info();
 	 }
 	public administrator(Account account,Socket socket) {
 		this.socket=socket;
 		this.account=account;
+		first_set();
 		get_global_info();
-		Link link=new Link(account);//link的起源
+		Link link=new Link();
 		link.setAccount(account);
 		link.setGlobal_info(global_info);//客户端的初始化
 		
@@ -151,26 +144,10 @@ public class administrator extends JFrame {
 		JButton button_3 = new JButton("\u540C\u6B65");
 		button_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				            account.setFlag(100);
-						try {
-							Socket socket_write=new Socket(ipconfig.getHost(), ipconfig.getPort());
-							ObjectOutputStream os=new ObjectOutputStream(socket_write.getOutputStream());
-							os.writeObject(account);
-							os.flush();
-							global_info=link.getGlobal_info();//部分更新全局信息
-							os.writeObject(global_info);
-							os.flush();
-							os.close();
-							socket_write.close();
-							 
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
-			
-				link.getAccount().setFlag(101);//回复为起始状态
-				
+				           
+						TCP tcp=new TCP();
+						global_info=link.getGlobal_info();//部分更新全局信息
+                        tcp.set_global_info(global_info);//上传到服务器
 			}
 		});
 		panel_1.add(button_3);
