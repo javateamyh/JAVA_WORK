@@ -29,7 +29,7 @@ import javax.swing.JList;
 import javax.swing.DefaultComboBoxModel;
 
 public class Store extends JFrame {
-    static int i=0;//表示第几个病人（case病历单clist.get(i)）
+
 	static int j; //某个病人的第几个药
 	static int gcount=0;//表示药库的第几个药与病人相比较
 	
@@ -118,7 +118,7 @@ public class Store extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Store(ArrayList<Drug_info> list,ObjectOutputStream out ,ArrayList<Case> clist,Case cs1,int i) {
+	public Store(Socket socket,ArrayList<Drug_info> list,ArrayList<Case> clist,Case cs1,int i) {
 		 j=0;//某一个病人的第几个药
 		 list1=list;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,7 +157,6 @@ public class Store extends JFrame {
 				{
 					
 							list1.get(gcount).setDrug_count(list1.get(gcount).getDrug_count()-cs1.getDrug_list().get(j).getDrug_count());
-							 
 							break; 
 				}}
 			}}
@@ -188,15 +187,14 @@ public class Store extends JFrame {
 				{
 					
 					list1.get(gcount).setDrug_count(list1.get(gcount).getDrug_count()-cs1.getDrug_list().get(j).getDrug_use());
-					 
 							break;
 				}
 				}
 				}
-			});j++;
-		panel_1.add(button_1);j++;
+			});
+		panel_1.add(button_1);
 		
-		j++;
+		
 		
 		JButton button_5 = new JButton("\u67E5\u770B\u75C5\u4EBA\u4FE1\u606F");
 		button_5.addActionListener(new ActionListener() {
@@ -258,6 +256,7 @@ public class Store extends JFrame {
 				if(i+1!=clist.size()){
 					try {
 						 med_info1.setDrug_list(list1);
+						 ObjectOutputStream out=new ObjectOutputStream(socket.getOutputStream());
 						out.writeObject( med_info1);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block

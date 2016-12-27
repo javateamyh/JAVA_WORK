@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.swing.plaf.SliderUI;
 
 import all_class.*;
 
@@ -22,8 +23,8 @@ public class Server {
 	private static  ArrayList<Account> account_list=new ArrayList<Account>();//存出账号信息
 	private static  ArrayList<Drug_info> drug_list=new ArrayList<Drug_info>();//药品的信息
 	private static ArrayList<Office> office_list=new ArrayList<Office>();
-	static int port=5000;
 	static boolean flag=false;
+	static int count=0;
 	public static Global_info getGlobal_info() {
 		return global_info;
 	}
@@ -123,30 +124,38 @@ public class Server {
 		getGlobal();//服务器的初始化
 		Storage storage=new Storage(global_info);
 		ServerSocket serverSocket=null;
-		Socket client=null;
+		
 		while(true)
 		{
+			Socket client=null;
+			System.out.println("服务器运行成功！");
              try {
-				serverSocket =new ServerSocket(port);
-				 client=serverSocket.accept();
+				serverSocket =new ServerSocket(ipconfig.getPort());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.exit(-1);
 			}
-            
-             Handel handel=new Handel(storage,client);
+             try {
+				client=serverSocket.accept();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				System.out.println("客户端接收异常");
+			}
+          Handel handel=new Handel(storage,client);
           ServerThread serverThread=new ServerThread(client, storage, handel);
           Thread thread=new Thread(serverThread);
           thread.start();
           try {
-			serverSocket.close();
+        	  //Thread.currentThread().sleep(50000);
+             serverSocket.close();   	 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("关闭失败!");
 		}
-	             
-			
+          System.out.println("服务器关闭");
+	
 		}	
 		
 	

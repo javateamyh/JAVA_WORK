@@ -9,32 +9,26 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class TCP {
-	private static Global_info global_info;
-	private static Socket socket;
-	private static Account account;//报头
-	
   //从服务器获取全局的信息
 	public static Global_info get_global_info(){
 		Account account=new Account("tcp", "tcp", 110);
+		Global_info global_info = null;
 		try {
 			Socket socket=new Socket(ipconfig.getHost(),ipconfig.getPort());
 			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+			os.writeObject(account);
+			os.flush();		
 			os.writeObject(account);
 			os.flush();
-			ObjectOutputStream os1=new ObjectOutputStream(socket.getOutputStream());
-			os1.writeObject(account);
-			os1.flush();
 			//钥匙
-			ObjectInputStream is=null;
-			is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			global_info=(Global_info)is.readObject();
 			is.close();
 			os.close();
-			os1.close();
 			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("没有服务器");
+			System.out.println("无法获取全局信息");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println("global_info获取失败");
@@ -50,22 +44,21 @@ public class TCP {
 	try {
 		socket = new Socket(ipconfig.getHost(),ipconfig.getPort());
 		ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+		ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+		os.writeObject(account);
+		os.flush();	
 		os.writeObject(account);
 		os.flush();
-		ObjectOutputStream os1=new ObjectOutputStream(socket.getOutputStream());
-		os1.writeObject(account);
-		os1.flush();
 		//钥匙
-		ObjectOutputStream os2=new ObjectOutputStream(socket.getOutputStream());
-		os2.writeObject(global_info);
-		os2.flush();
+		os.writeObject(global_info);
+		os.flush();
+		
 		os.close();
-		os1.close();
-		os2.close();
 		socket.close();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+		System.out.println("无法写入全局信息");
 	}
 	
 		
@@ -73,23 +66,20 @@ public class TCP {
 	
 	//获取到列表单给挂号端
 	public static ArrayList<Case> GetCase_toReg(){
-		ArrayList<Case> Case_list=new ArrayList<Case>();
+		ArrayList<Case> Case_list=null;
 		Account account=new Account("tcp", "tcp", 112);
 		Socket socket=null;
 		try {
 			socket = new Socket(ipconfig.getHost(),ipconfig.getPort());
 			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			os.writeObject(account);
 			os.flush();
-			ObjectOutputStream os1=new ObjectOutputStream(socket.getOutputStream());
-			os1.writeObject(account);
-			os1.flush();
+			os.writeObject(account);
+			os.flush();
 			//钥匙
-			ObjectInputStream is=null;
-			is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			Case_list=(ArrayList<Case>)is.readObject();
 			os.close();
-			os1.close();
 			is.close();
 			socket.close();
 			
@@ -109,18 +99,15 @@ public class TCP {
 		try {
 			socket = new Socket(ipconfig.getHost(),ipconfig.getPort());
 			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			os.writeObject(account);
 			os.flush();
-			ObjectOutputStream os1=new ObjectOutputStream(socket.getOutputStream());
-			os1.writeObject(account);
-			os1.flush();
+			os.writeObject(account);
+			os.flush();
 			//钥匙
-			ObjectOutputStream os2=new ObjectOutputStream(socket.getOutputStream());
-			os2.writeObject(cases);
-			os2.flush();
+			os.writeObject(cases);
+			os.flush();
 			os.close();
-			os1.close();
-			os2.close();
 			socket.close();
 			
 		} catch (IOException e) {
@@ -138,17 +125,15 @@ public class TCP {
 		try {
 			socket = new Socket(ipconfig.getHost(),ipconfig.getPort());
 			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			os.writeObject(account);
 			os.flush();
-			ObjectOutputStream os1=new ObjectOutputStream(socket.getOutputStream());
-			os1.writeObject(account);
-			os1.flush();
+		
+			os.writeObject(account);
+			os.flush();
 			//钥匙
-			ObjectInputStream is=null;
-			is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			Case_list=(ArrayList<Case>)is.readObject();
 			os.close();
-			os1.close();
 			is.close();
 			socket.close();
 			
@@ -171,19 +156,15 @@ public class TCP {
 		try {
 			socket = new Socket(ipconfig.getHost(),ipconfig.getPort());
 			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			os.writeObject(account);
 			os.flush();
-			ObjectOutputStream os1=new ObjectOutputStream(socket.getOutputStream());
-			os1.writeObject(account);
-			os1.flush();
+			os.writeObject(account);
+			os.flush();
 			//钥匙
-			
-			ObjectOutputStream os2=new ObjectOutputStream(socket.getOutputStream());
-			os2.writeObject(cases);
-			os2.flush();
+			os.writeObject(cases);
+			os.flush();
 			os.close();
-			os1.close();
-			os2.close();
 			socket.close();
 			
 		} catch (IOException e) {

@@ -27,7 +27,7 @@ public class Charge_info implements Serializable {
 		Drug_fee = drug_fee;
 	}
 	public float getSum_fee() {
-		return Sum_fee;
+		return Sum_fee=Docter_fee+Drug_fee;
 	}
 	public void setSum_fee(float sum_fee) {
 		Sum_fee = sum_fee;

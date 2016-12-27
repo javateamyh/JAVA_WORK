@@ -1,12 +1,9 @@
 package Logup;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import Administrator.administrator;
 import Check.yuanzhangchaxun;
 import Large_Sreen.Screen;
@@ -18,6 +15,7 @@ import Treatment.Treatment;
 import Treatment.Treatment1;
 import all_class.Account;
 import all_class.ipconfig;
+import all_class.statistic_info;
 import register.kehuyuyueSwing;
 
 import javax.swing.JLabel;
@@ -119,9 +117,9 @@ public class Logup extends JFrame {
 					ipconfig ip=new ipconfig();
 					socket=new Socket(ip.getHost(),ip.getPort());
 					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+					ObjectInputStream is=new ObjectInputStream(socket.getInputStream());
 					os.writeObject(account);
 					os.flush();
-					ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 					account_back=(Account)is.readObject();
 					if(account_back.getFlag()==-1)
 					{
@@ -131,18 +129,17 @@ public class Logup extends JFrame {
 					else 
 					{
 						switch (account_back.getFlag()-100) {
-						
-						case 1:  administrator administrator=new administrator(account_back,socket);
+						case 1:  administrator administrator=new administrator(os,is,account_back,socket);
 						administrator.setVisible(true);break;
-						case 2:Register register=new Register(account,socket);register.setVisible(true);break;
+						case 2:Register register=new Register(os,is,account_back,socket);register.setVisible(true);break;
 						case 3:    {
-							Treatment1 treatment=new Treatment1(account_back,socket);
+							Treatment1 treatment=new Treatment1(os,is,account_back,socket);
 							treatment.setVisible(true);
 							break;
 							
 						}
-						case 4:{ store1 store=new store1(account_back,socket);break; }
-						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun();
+						case 4:{ store1 store=new store1(os,is,account_back,socket);store.setVisible(true);break; }
+						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun(os,is,account_back,socket);
 						break;
 						}
 							
@@ -181,10 +178,28 @@ public class Logup extends JFrame {
 					ipconfig ip=new ipconfig();
 					socket = new Socket(ip.getHost(), ip.getPort());
 					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+					ObjectInputStream is=new ObjectInputStream(socket.getInputStream());
 					os.writeObject(account);
 					os.flush();
-					ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 					account_back=(Account)is.readObject();
+					if(account_back.getFlag()==-1)
+					{
+						lblNewLabel.setVisible(true);
+						lblNewLabel.setText("对不起，密码错误");
+					}
+					
+					else
+					{
+					
+					try {
+						kehuyuyueSwing ke=new kehuyuyueSwing(os,is,account_back,socket);
+						ke.setVisible(true);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					}	
+					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -193,23 +208,7 @@ public class Logup extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				if(account_back.getFlag()==-1)
-				{
-					lblNewLabel.setVisible(true);
-					lblNewLabel.setText("对不起，密码错误");
-				}
-				
-				else
-				{
-				
-				try {
-					kehuyuyueSwing ke=new kehuyuyueSwing(account_back,socket);
-					ke.setVisible(true);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				}	
+			
 				
 			}
 		});
@@ -225,10 +224,20 @@ public class Logup extends JFrame {
 					ipconfig ip=new ipconfig();
 					socket = new Socket(ip.getHost(), ip.getPort());
 					ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+					ObjectInputStream is=new ObjectInputStream(socket.getInputStream());
 					os.writeObject(account);
 					os.flush();
-					ObjectInputStream is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 					account_back=(Account)is.readObject();
+					if(account_back.getFlag()==-1)
+					{
+						lblNewLabel.setVisible(true);
+						lblNewLabel.setText("对不起，密码错误");
+					}
+					
+					else
+					{
+						Screen screen=new Screen(os,is,account_back,socket);
+					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -236,24 +245,8 @@ public class Logup extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				try {
-					socket.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
-				if(account_back.getFlag()==-1)
-				{
-					lblNewLabel.setVisible(true);
-					lblNewLabel.setText("对不起，密码错误");
-				}
-				
-				else
-				{
-					Screen screen=new Screen(account_back,socket);
-				}
-				
+			
 			}
 		});
 		btnNewButton_1.setBounds(240, 196, 93, 23);

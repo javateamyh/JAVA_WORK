@@ -24,6 +24,13 @@ public class Storage {
 
 	public static void setGlobal_info(Global_info global_info) {
 		Storage.global_info = global_info;
+		try {
+			Writer_global_info();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("写入失败!");
+		}
 	}
 
 	
@@ -33,7 +40,7 @@ public class Storage {
 		ArrayList<Drug_info>drug=global_info.getDrug_list();
 		BufferedWriter bu_account=new BufferedWriter(new FileWriter(".//账号信息.txt"));
 		int i;
-		String values;
+		String values=null;
 		for(i=0;i<accounts.size();i++)
 		{
 			values=accounts.get(i).getID();
@@ -41,6 +48,7 @@ public class Storage {
 			values+=" "+accounts.get(i).getFlag()+"\r\n";
 			bu_account.write(values);
 		}
+		bu_account.close();
 		BufferedWriter bu_drug=new BufferedWriter(new FileWriter(".//药品信息.txt"));
 		for(i=0;i<drug.size();i++)
 		{
@@ -50,6 +58,7 @@ public class Storage {
 			values+=" "+drug.get(i).getDrug_count()+"\r\n";
 			bu_drug.write(values);
 		}
+		bu_drug.close();
 		int j;
 		BufferedWriter bu_office=new BufferedWriter(new FileWriter(".//科室信息.txt"));
 		
@@ -64,6 +73,7 @@ public class Storage {
 			}
 			bu_office.write(values);
 		}
+		bu_office.close();
 		
 	}
 

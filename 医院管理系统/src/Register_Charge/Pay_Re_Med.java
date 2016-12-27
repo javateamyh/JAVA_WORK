@@ -22,8 +22,6 @@ public class Pay_Re_Med extends JFrame {
 	private static ArrayList<Case> Register_Charged;//用于挂号端的收费
 	private JPanel contentPane;
 	static int j=0;
-	private static JLabel lblPay;
-	private static JLabel lblName;
 	static int i=0;
 	private static Socket socket;
 	private static Account account;
@@ -47,12 +45,12 @@ public class Pay_Re_Med extends JFrame {
 		{
 			GetData();
 		}
+		JLabel lblName = new JLabel("New label");
+		JLabel lblPay = new JLabel("New label");	
 		if(i<Register_Charged.size())
 		{
 			case2=Register_Charged.get(i);
-			case2.getPi().getName();
-			case2.getCharge().getSum_fee();
-			lblName.setText("病人需要缴费 " +case2.getPi().getName());
+			lblName.setText("病人: " +case2.getPi().getName());
 			lblPay.setText("病人需要缴费 " +case2.getCharge().getSum_fee());
 			case2.getCharge().setPay(true);
 		}
@@ -78,14 +76,14 @@ public class Pay_Re_Med extends JFrame {
 		panel_1.setBounds(0, 34, 424, 25);
 		contentPane.add(panel_1);
 		
-		JLabel lblName = new JLabel("New label");
+		
 		panel_1.add(lblName);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(0, 69, 424, 25);
 		contentPane.add(panel_2);
 		
-		JLabel lblPay = new JLabel("New label");
+	
 		panel_2.add(lblPay);
 		
 		JPanel panel_3 = new JPanel();
@@ -120,11 +118,11 @@ public class Pay_Re_Med extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(i<Register_Charged.size())
-				{
+				{    i++;
 					dispose();
 					Pay_Re_Med frame = new Pay_Re_Med();
 					frame.setVisible(true);
-					i++;
+					
 				}
 				else 
 				{

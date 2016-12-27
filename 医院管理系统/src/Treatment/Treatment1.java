@@ -22,6 +22,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
 
 
 
@@ -31,15 +32,18 @@ public class Treatment1 extends JFrame {
 	private static ArrayList<Case> clist;//接受服务器信息的clist
 	private static ArrayList<Case> clist1;//发送的用于修改服务器的clist1
     private static Account account;
-     static ObjectOutputStream out;
+     static ObjectOutputStream os;
 	private static int i=0;
 	private static ArrayList<Drug_info> list;//用于修改clist1的医生开的药
 	private static Global_info global_info;//(从服务器接受的全局变量  主要接受药库信息）
 	private JPanel contentPane;
 	private static Socket socket;
-	public Treatment1(Account account,Socket socket) {
+	 static ObjectInputStream is;
+	public Treatment1(ObjectOutputStream os,ObjectInputStream is,Account account,Socket socket) {
 		this.socket=socket;
 		this.account=account;
+		Treatment1.os=os;
+		Treatment1.is=is;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -60,18 +64,15 @@ public class Treatment1 extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				    int cishu=0;
-			    	clist=new ArrayList<Case>();
+			    	
 					clist1=new ArrayList<Case>() ;
 		
 				try {				
-			     out =new ObjectOutputStream(socket.getOutputStream());	
-			     out.writeObject(account);//告诉服务器客户端的类型
-			     out.flush();
+			     os.writeObject(account);//告诉服务器客户端的类型
+			     os.flush();
 			     try {
-			    	 ObjectInputStream in=new 
-								ObjectInputStream(socket.getInputStream());
-					global_info=(Global_info) in.readObject();
-					clist=(ArrayList<Case>) in.readObject();
+					global_info=(Global_info) is.readObject();
+					clist=(ArrayList<Case>) is.readObject();
 				} catch (ClassNotFoundException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
@@ -85,7 +86,7 @@ public class Treatment1 extends JFrame {
 					e1.printStackTrace();
 				}
 
-				if(clist==null){
+				if(clist.size()==0){
 					JFrame frm=new JFrame();
 					   JLabel lb1;
 					   JPanel j1;
@@ -131,19 +132,26 @@ public class Treatment1 extends JFrame {
 					
 					clist1=clist;
 				list=clist1.get(i).getDrug_list();
-				Treatment frame = new Treatment(out,global_info,clist1,i);
+				Treatment frame = new Treatment(os,is,socket,global_info,clist1,i);
 				frame.setVisible(true);
 				i++;
 				
-			}if(i+1==clist1.size())
-			{
-				i=0;
-				
-			}	
+			}
+		
+			
 			
 			}}		
 		});
+		panel_1.setLayout(new GridLayout(6, 1, 0, 0));
 		panel_1.add(button);
+		
+		JButton button_1 = new JButton("\u9000\u51FA");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		panel_1.add(button_1);
 	}
 
 }

@@ -28,13 +28,14 @@ public class Register extends JFrame {
     private static ObjectOutputStream out;
     private static JFrame frame;
 	private JPanel contentPane;
+	static ObjectOutputStream os;
+	 static ObjectInputStream is;
 	/**
 	 * Launch the application.
 	 */
 	
 	public static void frist_set(){
 		try {
-			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
 			os.writeObject(account);
 			os.flush();
 			os.close();
@@ -45,9 +46,11 @@ public class Register extends JFrame {
 		}
 	}
 	
-	public Register(Account account,Socket socket) {
+	public Register(ObjectOutputStream os,ObjectInputStream is,Account account,Socket socket) {
 		this.account=account;
 		this.socket=socket;
+		Register.os=os;
+		Register.is=is;
 	    frist_set();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -109,6 +112,14 @@ public class Register extends JFrame {
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(0, 203, 434, 58);
 		contentPane.add(panel_4);
+		
+		JButton button = new JButton("\u9000\u51FA");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		panel_4.add(button);
 			
 	}
 }

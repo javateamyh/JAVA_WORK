@@ -42,15 +42,15 @@ public class administrator extends JFrame {
 	 private static Socket socket;
 	 private final Action action = new SwingAction();
 	 private JButton button_1;
+	 static ObjectInputStream is;
+	 static ObjectOutputStream os;
 
 	/**
 	 * Launch the application.
 	 * @return 
 	 */
 	 public static void first_set(){
-		 ObjectOutputStream os;
 		try {
-			os = new ObjectOutputStream(socket.getOutputStream());
 			 os.writeObject(account);
 			 os.flush();
 		     os.close();
@@ -67,9 +67,11 @@ public class administrator extends JFrame {
 		TCP tcp=new TCP();
 		global_info=tcp.get_global_info();
 	 }
-	public administrator(Account account,Socket socket) {
+	public administrator(ObjectOutputStream os,ObjectInputStream is,Account account,Socket socket) {
 		this.socket=socket;
 		this.account=account;
+		administrator.os=os;
+		administrator.is=is;
 		first_set();
 		get_global_info();
 		Link link=new Link();
@@ -139,6 +141,11 @@ public class administrator extends JFrame {
 		panel_1.add(button_2);
 		
 		JButton btnTu = new JButton("\u9000\u51FA");
+		btnTu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		panel_1.add(btnTu);
 		
 		JButton button_3 = new JButton("\u540C\u6B65");

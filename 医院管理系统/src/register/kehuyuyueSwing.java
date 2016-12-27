@@ -51,16 +51,18 @@ public class kehuyuyueSwing extends JFrame {
 	private JTextField textField_3;//电话
 	private JTextField textField_5;//时间
 	static Account account;
-	 Patient_info patient=new Patient_info();
-	Appointment appointment=new Appointment();
+	 static Patient_info patient;
+	static Appointment appointment;
 	 static Case patient_case=new Case();
-	 static ArrayList<Case> cases=new ArrayList<>();
+	 static ArrayList<Case> cases=new ArrayList<Case>();
 	
 	 static String host="127.0.0.1";
 	 static int port=5000;
 	 static ArrayList<String> doctername=new ArrayList<String>();
 	 private static Socket socket;
 	 static int page=0;
+	static ObjectOutputStream os;
+	 static ObjectInputStream is;
 	 static int flag=0;//用于存放查找到的医生是第几个科室
 	int i,j;//i记录所中的科室在数组中的位置，j记录所中的医生在数组中的位置
 	
@@ -75,18 +77,11 @@ public class kehuyuyueSwing extends JFrame {
 //			
 			
 			try{
-		
-				
-				ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());//由套接对象输出
 				os.writeObject(account);
 				os.flush();
-			
 				try{
-					ObjectInputStream in=new ObjectInputStream(socket.getInputStream());//由套接对象输入
-	/*获取全局信息量*/	Global_info global_info=(Global_info)in.readObject();
-					office_list=global_info.getCount_office();
-				
-				
+	/*获取全局信息量*/	Global_info global_info=(Global_info)is.readObject();
+					office_list=global_info.getCount_office();	
 				}catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -98,17 +93,19 @@ public class kehuyuyueSwing extends JFrame {
 		
 			}
 		
-			
-	
 
-	public   kehuyuyueSwing(Account account,Socket socket) throws IOException {
+	public   kehuyuyueSwing(ObjectOutputStream os,ObjectInputStream is,Account account,Socket socket) throws IOException {
 		this.account=account;
 		this.socket=socket;
+		this.os=os;
+		this.is=is;
 		if(page==0)
 		{
 			Register();
 		}
-		
+		page++;
+		appointment=new Appointment();
+		patient=new Patient_info();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -127,7 +124,7 @@ public class kehuyuyueSwing extends JFrame {
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("\u8BF7\u8F93\u5165\u75C5\u4EBA\u7684\u57FA\u672C\u60C5\u51B5\uFF1A");
-		lblNewLabel.setBounds(13, 8, 132, 15);
+		lblNewLabel.setBounds(13, 8, 187, 15);
 		panel_1.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("\u540D\u5B57\uFF1A");
@@ -178,7 +175,7 @@ public class kehuyuyueSwing extends JFrame {
 		textField_3.setColumns(10);
 		
 		JLabel lblNewLabel_4 = new JLabel("\u9884\u7EA6\u79D1\u5BA4\uFF1A");
-		lblNewLabel_4.setBounds(273, 76, 60, 15);
+		lblNewLabel_4.setBounds(273, 76, 73, 15);
 		panel_1.add(lblNewLabel_4);
 				
 		
@@ -190,7 +187,7 @@ public class kehuyuyueSwing extends JFrame {
 		JComboBox comboBox = new JComboBox(officename);
 		comboBox.setBounds(269, 104, 73, 21);
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(352, 104, 62, 21);
+		comboBox_1.setBounds(352, 104, 72, 21);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				for(i=0;i<office_list.size();i++)
@@ -201,6 +198,7 @@ public class kehuyuyueSwing extends JFrame {
                          flag=i;
 						break;
 					}
+					
 				
 				}
 				doctername.clear();
@@ -211,6 +209,7 @@ public class kehuyuyueSwing extends JFrame {
 				String[] docter=(String[])doctername.toArray(new String[doctername.size()]);
 				appointment.setApp_office(office_list.get(i));      //预约标识位
 				appointment.setAppoint(true);
+				comboBox_1.removeAll();
 				comboBox_1.addItem(doctername);
 				
 				
@@ -234,11 +233,8 @@ public class kehuyuyueSwing extends JFrame {
 		
 		comboBox_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			for(i=0;i<office_list.get(flag).getDoctor().size();i++)
-			{
-				if(office_list.get(i).getDocter_name().get(i).equals(comboBox_1.getSelectedItem().toString()))
-					break;
-			}
+	
+			appointment.setDocter_name(comboBox_1.getSelectedItem().toString());
 		
 			}
 			
@@ -261,34 +257,30 @@ public class kehuyuyueSwing extends JFrame {
 		textField_5.setColumns(10);
 		
 		JButton button = new JButton("\u63D0\u4EA4");
-		button.setBounds(109, 192, 66, 23);
+		button.setBounds(199, 192, 66, 23);
 		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {//上传时间
-				/*Patient_info patient=new Patient_info();
-				Appointment appointment=new Appointment();
-				Case patient_case=new Case();*/
-				
+			public void actionPerformed(ActionEvent arg0) {//提交
 				
 				patient.setName(textField.getText().toString());
 				patient.setSex(JRadioButton.isLightweightComponent(radioButton));//true是男
 				patient.setYears(Integer.parseInt(textField_1.getText().toString()) );
 				patient.setTel(textField_3.getText().toString());
 				
-		/* 初始化用户信息*/		patient_case.setPi(patient);
+		/* 初始化用户信息*/		
 				
 				//appointment.setApp_office(officename[]);/****************************/
 				
-				
 				appointment.setAppoint_time(Integer.parseInt(textField_5.getText().toString()));
 				appointment.setAppoint(true);
-/* 初始化预约信息*/	patient_case.setApp(appointment);
-				//向服务器发送消息
-				
-                 cases.add(patient_case);
-              
+				Case case1=new Case();
+				case1.setPi(patient);
+/* 初始化预约信息*/	case1.setApp(appointment);
+				//向服务器发送消息	
+                cases.add(case1);
+                   dispose();
                  try {
-                	//setVisible(false);
-					kehuyuyueSwing k=new kehuyuyueSwing(account, socket);
+                
+					kehuyuyueSwing k=new kehuyuyueSwing(os,is,account,socket);
 					k.setVisible(true);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -299,14 +291,12 @@ public class kehuyuyueSwing extends JFrame {
 		});
 		panel_1.add(button);
 		
-		JButton btnNewButton = new JButton("\u9000\u51FA");
-		btnNewButton.setBounds(189, 192, 74, 23);
+		JButton btnNewButton = new JButton("\u5B8C\u6210");
+		btnNewButton.setBounds(98, 192, 74, 23);
 		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				  ObjectOutputStream os=null;
+			public void actionPerformed(ActionEvent e) {//完成
 					try {
-						os = new ObjectOutputStream(socket.getOutputStream());
-						  os.writeObject(cases);
+						    os.writeObject(cases);
 			                os.flush();
 			              
 					} catch (IOException e1) {
@@ -319,7 +309,7 @@ public class kehuyuyueSwing extends JFrame {
 		panel_1.add(btnNewButton);
 		
 		JLabel label_2 = new JLabel("\u533B\u751F\uFF1A");
-		label_2.setBounds(347, 76, 67, 15);
+		label_2.setBounds(349, 74, 65, 18);
 		panel_1.add(label_2);
 	
 	}

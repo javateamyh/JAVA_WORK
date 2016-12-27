@@ -37,10 +37,11 @@ public class yuanzhangchaxun {
 	private JFrame frame;
 	//static Global_info global_info=new Global_info();
 	static Account account;//院长的账号信息
+	static Socket socket;
 	static ArrayList<Office> office_list;
 	static ArrayList<Drug_info> drug_list;
-	 static String host="127.0.0.1";
-	 static int port=5000;
+	static ObjectOutputStream os;
+	 static ObjectInputStream is;
     
 
 
@@ -48,7 +49,7 @@ public class yuanzhangchaxun {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					yuanzhangchaxun window = new yuanzhangchaxun();
+					yuanzhangchaxun window = new yuanzhangchaxun(os,is,account,socket);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -98,9 +99,12 @@ public class yuanzhangchaxun {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	public yuanzhangchaxun() {
+	public yuanzhangchaxun(ObjectOutputStream os,ObjectInputStream is,Account account,Socket socket) {
 		// TODO Auto-generated constructor stub
-	
+	    this.account=account;
+	    this.socket=socket;
+	    yuanzhangchaxun.os=os;
+	    yuanzhangchaxun.is=is;
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

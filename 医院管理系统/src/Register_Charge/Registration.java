@@ -57,15 +57,12 @@ public class Registration extends JFrame {
 		TCP tcp =new TCP();
 		global_info=tcp.get_global_info();
 		cases=tcp.GetCase_toReg();//获得等待列表
-		
-		
 	}
 	public Registration() {
 		if(page==0)//只有第一次接收数据
 		{
 			GetData();//获得信息
 		}
-	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 461, 332);
 		contentPane = new JPanel();
@@ -114,7 +111,7 @@ public class Registration extends JFrame {
 		{
 			office_name[i]=global_info.getCount_office().get(i).getOffice_name();
 		}
-		JComboBox comboBox = new JComboBox();
+		JComboBox comboBox = new JComboBox(office_name);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {//修改科室
 				String name=comboBox.getSelectedItem().toString();
@@ -142,21 +139,22 @@ public class Registration extends JFrame {
 		});
 	
 		panel_1.add(comboBox);
-		
+		JLabel lblNewLabel_9 = new JLabel("New label");
 		JLabel label_3 = new JLabel("\u9884\u7EA6\u533B\u751F\uFF1A");
 		panel_1.add(label_3);
-		JLabel lblNewLabel_9 = new JLabel("New label");
+		
 		if(page>=cases.size())//显示病人的信息
 		{
 			lblNewLabel_9.setVisible(true);
 			if(cases.size()==0)
 			{
-				lblNewLabel_9.setVisible(true);
+				
 				lblNewLabel_9.setText("当前没有病人预约");
 			}
 			else 
 			{
 				upload();
+				
 				lblNewLabel_9.setText("病人的信息已经提交给服务器");
 			}
 				
@@ -174,11 +172,17 @@ public class Registration extends JFrame {
 			comboBox.setSelectedItem(cases.get(page).getApp().getApp_office().getOffice_name());
 			 
 			String []doc_name=new String[global_info.getCount_office().get(page).getDoctor().size()];
-			doc_name=(String[])global_info.getCount_office().get(page).getDoctor().toArray();
+	for(int i=0;i<global_info.getCount_office().get(page).getDoctor().size();i++)
+	{
+		doc_name[i]=global_info.getCount_office().get(page).getDoctor().get(i);
+	}
 			comboBox_1.addItem(doc_name);
-			comboBox_1.setSelectedItem(cases.get(page).getApp().getDocter_name());
-			page++;
+			comboBox_1.setSelectedItem(app.getDocter_name());
+			
 		}
+		
+		
+		
 		JButton button = new JButton("\u8FD4\u56DE");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {//取消的监听事件
@@ -192,26 +196,36 @@ public class Registration extends JFrame {
 		
 		JButton button_1 = new JButton("\u4E0B\u4E00\u4E2A\u9884\u7EA6");
 		button_1.addActionListener(new ActionListener() {
+			
+			
 			public void actionPerformed(ActionEvent arg0) {//预约的监听事件
-				if(page<cases.size())
+				page++;
+				if(page<=cases.size())
 				{
 					dispose();
 					Registration re=new Registration();
 					re.setVisible(true);
 				}
+			
+				
 				
 				
 			}
 		});
+		
+		
 		panel_1.add(button_1);
+		
+		JPanel panel_3 = new JPanel();
+		panel_1.add(panel_3);
+		
+		
+		lblNewLabel_9.setVisible(false);
+		panel_3.add(lblNewLabel_9);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
-		
-	
-		lblNewLabel_9.setVisible(false);
 		panel_2.setLayout(new GridLayout(0, 1, 0, 0));
-		panel_2.add(lblNewLabel_9);
 	}
 	
 

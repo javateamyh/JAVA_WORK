@@ -49,6 +49,8 @@ public class Screen extends JFrame {
 	private static Waiter wait1;//一个医生后面的队初始化
 	private JPanel contentPane;
 	private static Socket socket;
+	static ObjectInputStream is;
+	static ObjectOutputStream os;
 
 	/**
 	 * Launch the application.
@@ -60,14 +62,8 @@ public class Screen extends JFrame {
 	
 				// TODO Auto-generated method stub
 				try {
-					
-					ObjectInputStream is=null;
-					ObjectOutputStream os=null;
-					
-					out=new ObjectOutputStream(socket.getOutputStream());
 				    out.writeObject(account);
 				    out.flush();
-				    in=new ObjectInputStream(socket.getInputStream());
 				    info=(Global_info)in.readObject();//从服务器接受科室的所有信息     
 				    officelist=info.getCount_office();
 			        RegisterDocter=(ArrayList<Case>)in.readObject();
@@ -89,8 +85,10 @@ public class Screen extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Screen(Account account,Socket socket) {
+	public Screen(ObjectOutputStream os,ObjectInputStream is,Account account,Socket socket) {
 		this.account=account;
+		Screen.os=os;
+		Screen.is=is;
 		get_global_info();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
