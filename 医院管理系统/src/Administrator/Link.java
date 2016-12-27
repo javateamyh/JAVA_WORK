@@ -16,10 +16,7 @@ public class Link {
 	private static Account account;//´æ´¢±¾»úµÄÕËºÅ
 	private static Global_info global_info;
 	static int port=5000;
-	public   Link(Account account) {
-		// TODO Auto-generated constructor stub
-	this.account=account;
-	}
+	
 
 	public static Account getAccount() {
 		return account;

@@ -53,12 +53,14 @@ public class kehuyuyueSwing extends JFrame {
 	static Account account;
 	 Patient_info patient=new Patient_info();
 	Appointment appointment=new Appointment();
-	Case patient_case=new Case();
+	 static Case patient_case=new Case();
+	 static ArrayList<Case> cases=new ArrayList<>();
 	
 	 static String host="127.0.0.1";
 	 static int port=5000;
 	 static ArrayList<String> doctername=new ArrayList<String>();
 	 private static Socket socket;
+	 static int page=0;
 	 static int flag=0;//用于存放查找到的医生是第几个科室
 	int i,j;//i记录所中的科室在数组中的位置，j记录所中的医生在数组中的位置
 	
@@ -102,7 +104,11 @@ public class kehuyuyueSwing extends JFrame {
 	public   kehuyuyueSwing(Account account,Socket socket) throws IOException {
 		this.account=account;
 		this.socket=socket;
-		Register();
+		if(page==0)
+		{
+			Register();
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -125,29 +131,29 @@ public class kehuyuyueSwing extends JFrame {
 		panel_1.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("\u540D\u5B57\uFF1A");
-		lblNewLabel_1.setBounds(109, 44, 36, 15);
+		lblNewLabel_1.setBounds(109, 44, 49, 15);
 		panel_1.add(lblNewLabel_1);
 		
 		textField = new JTextField();
-		textField.setBounds(159, 41, 66, 21);
+		textField.setBounds(159, 41, 104, 21);
 		panel_1.add(textField);
 		textField.setColumns(10);
 		
 		JLabel label = new JLabel("\u5E74\u9F84\uFF1A");
-		label.setBounds(109, 107, 36, 15);
+		label.setBounds(109, 107, 49, 15);
 		panel_1.add(label);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(159, 104, 66, 21);
+		textField_1.setBounds(159, 104, 104, 21);
 		panel_1.add(textField_1);
 		textField_1.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("\u6027\u522B\uFF1A");
-		lblNewLabel_2.setBounds(109, 132, 36, 15);
+		lblNewLabel_2.setBounds(109, 132, 49, 15);
 		panel_1.add(lblNewLabel_2);
 		
 		JRadioButton radioButton=new JRadioButton("\u7537");
-		radioButton.setBounds(169, 131, 37, 23);
+		radioButton.setBounds(169, 131, 60, 23);
 		radioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -163,16 +169,16 @@ public class kehuyuyueSwing extends JFrame {
 		panel_1.add(radioButton);
 		
 		JLabel lblNewLabel_3 = new JLabel("\u7535\u8BDD\uFF1A");
-		lblNewLabel_3.setBounds(109, 76, 36, 15);
+		lblNewLabel_3.setBounds(109, 76, 49, 15);
 		panel_1.add(lblNewLabel_3);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(159, 73, 66, 21);
+		textField_3.setBounds(159, 73, 104, 21);
 		panel_1.add(textField_3);
 		textField_3.setColumns(10);
 		
 		JLabel lblNewLabel_4 = new JLabel("\u9884\u7EA6\u79D1\u5BA4\uFF1A");
-		lblNewLabel_4.setBounds(269, 76, 60, 15);
+		lblNewLabel_4.setBounds(273, 76, 60, 15);
 		panel_1.add(lblNewLabel_4);
 				
 		
@@ -182,9 +188,9 @@ public class kehuyuyueSwing extends JFrame {
 					officename[i]=office_list.get(i).getOffice_name();
 					}
 		JComboBox comboBox = new JComboBox(officename);
-		comboBox.setBounds(269, 104, 60, 21);
+		comboBox.setBounds(269, 104, 73, 21);
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(352, 104, 49, 21);
+		comboBox_1.setBounds(352, 104, 62, 21);
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				for(i=0;i<office_list.size();i++)
@@ -246,7 +252,7 @@ public class kehuyuyueSwing extends JFrame {
 		
 		
 		JLabel lblNewLabel_5 = new JLabel("\u9884\u7EA6\u65F6\u95F4\uFF1A");
-		lblNewLabel_5.setBounds(109, 164, 60, 15);
+		lblNewLabel_5.setBounds(109, 164, 66, 15);
 		panel_1.add(lblNewLabel_5);
 		
 		textField_5 = new JTextField();
@@ -255,7 +261,7 @@ public class kehuyuyueSwing extends JFrame {
 		textField_5.setColumns(10);
 		
 		JButton button = new JButton("\u63D0\u4EA4");
-		button.setBounds(109, 192, 57, 23);
+		button.setBounds(109, 192, 66, 23);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {//上传时间
 				/*Patient_info patient=new Patient_info();
@@ -278,34 +284,42 @@ public class kehuyuyueSwing extends JFrame {
 /* 初始化预约信息*/	patient_case.setApp(appointment);
 				//向服务器发送消息
 				
-                ObjectOutputStream os=null;
-				try {
-					os = new ObjectOutputStream(socket.getOutputStream());
-					  os.writeObject(patient_case);
-		                os.flush();
-		              
+                 cases.add(patient_case);
+              
+                 try {
+                	//setVisible(false);
+					kehuyuyueSwing k=new kehuyuyueSwing(account, socket);
+					k.setVisible(true);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-            
-				
+				}		
 				
 			}
 		});
 		panel_1.add(button);
 		
 		JButton btnNewButton = new JButton("\u9000\u51FA");
-		btnNewButton.setBounds(189, 192, 57, 23);
+		btnNewButton.setBounds(189, 192, 74, 23);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				  ObjectOutputStream os=null;
+					try {
+						os = new ObjectOutputStream(socket.getOutputStream());
+						  os.writeObject(cases);
+			                os.flush();
+			              
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				dispose();
 			}
 		});
 		panel_1.add(btnNewButton);
 		
 		JLabel label_2 = new JLabel("\u533B\u751F\uFF1A");
-		label_2.setBounds(339, 76, 54, 15);
+		label_2.setBounds(347, 76, 67, 15);
 		panel_1.add(label_2);
 	
 	}

@@ -22,6 +22,8 @@ import javax.swing.JScrollPane;
 public class Register extends JFrame {
 	static int i=0;
 	private static  Account account;
+	private static Socket socket;
+	private static Global_info global_info;
     private static ObjectInputStream in;
     private static ObjectOutputStream out;
     private static JFrame frame;
@@ -30,39 +32,23 @@ public class Register extends JFrame {
 	 * Launch the application.
 	 */
 	
+	public static void frist_set(){
+		try {
+			ObjectOutputStream os=new ObjectOutputStream(socket.getOutputStream());
+			os.writeObject(account);
+			os.flush();
+			os.close();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("无法连接服务器");
+		}
+	}
 	
-	public static void get_global_info(){
-		 new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Socket server2=null;
-				try {
-				
-					ipconfig ip=new ipconfig();
-					server2=new Socket(ip.getHost(),ip.getPort());
-				
-					ObjectInputStream is=null;
-					ObjectOutputStream os=null;
-					in=new ObjectInputStream(server2.getInputStream());
-					out=new ObjectOutputStream(server2.getOutputStream());
-					account.setFlag(2); 
-				    out.writeObject(account);
-				    out.flush();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}).start();		 
-		 
-	 }
-	
-	public Register(Account account) {
+	public Register(Account account,Socket socket) {
 		this.account=account;
-		
-		get_global_info();
+		this.socket=socket;
+	    frist_set();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -90,8 +76,8 @@ public class Register extends JFrame {
 		JButton btnReg = new JButton("\u6302\u53F7");
 		btnReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Res frame = new Res(account);
-				frame.setVisible(true);
+				Registration registration=new Registration();
+				registration.setVisible(true);
 			}
 		});
 		panel_1.add(btnReg);
@@ -114,7 +100,7 @@ public class Register extends JFrame {
 		JButton btnReg_Pay = new JButton("\u6302\u53F7\u6536\u8D39");
 		btnReg_Pay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Pay_Re_Med frame = new Pay_Re_Med(account);
+				Pay_Re_Med frame = new Pay_Re_Med();
 				frame.setVisible(true);
 			}
 		});

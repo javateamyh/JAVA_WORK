@@ -11,8 +11,11 @@ import Administrator.administrator;
 import Check.yuanzhangchaxun;
 import Large_Sreen.Screen;
 import Register_Charge.Pay_Re_Med;
+import Register_Charge.Register;
 import Store.Store;
+import Store.store1;
 import Treatment.Treatment;
+import Treatment.Treatment1;
 import all_class.Account;
 import all_class.ipconfig;
 import register.kehuyuyueSwing;
@@ -131,15 +134,15 @@ public class Logup extends JFrame {
 						
 						case 1:  administrator administrator=new administrator(account_back,socket);
 						administrator.setVisible(true);break;
-						case 2:Pay_Re_Med pay_Re_Med=new Pay_Re_Med(account_back);
+						case 2:Register register=new Register(account,socket);register.setVisible(true);break;
 						case 3:    {
-							Treatment treatment=new Treatment(account_back,socket);
+							Treatment1 treatment=new Treatment1(account_back,socket);
 							treatment.setVisible(true);
 							break;
 							
 						}
-						case 4:{ Store store=new Store(account_back);break; }
-						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun(account_back);
+						case 4:{ store1 store=new store1(account_back,socket);break; }
+						case 5:{yuanzhangchaxun yuanzhangchaxun=new yuanzhangchaxun();
 						break;
 						}
 							
@@ -160,6 +163,11 @@ public class Logup extends JFrame {
 		panel_1.add(button);
 		
 		JButton button_1 = new JButton("\u53D6\u6D88");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		button_1.setBounds(130, 155, 89, 31);
 		panel_1.add(button_1);
 		
@@ -243,7 +251,7 @@ public class Logup extends JFrame {
 				
 				else
 				{
-					Screen screen=new Screen(account_back);
+					Screen screen=new Screen(account_back,socket);
 				}
 				
 			}

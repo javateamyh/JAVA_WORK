@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Handler;
 
 import all_class.Account;
+import all_class.Case;
 import all_class.Drug_info;
 import all_class.Global_info;
 import all_class.Office;
@@ -49,22 +50,22 @@ public class ServerThread implements Runnable {
 	
 	public static void Check_count(Socket socket){//检查模块
 		
-		boolean flag=false;
+	
 		ObjectInputStream is=null;
 		ObjectOutputStream os=null;
 		try {
 			is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
 	       
 	        try {
-/*第一次接收客户端的内容	*/Account account=(Account) is.readObject();//接收账号 的检测
-              os=new ObjectOutputStream(socket.getOutputStream());
+/*第一次接收客户端的内容	*/Account account=(Account) is.readObject();//接收账号 的检测   
+                     
 				if(account.getFlag()>100)
 				{
 					Select_moduel(socket);
 				}
 				else
 				{//用于初次的检测
-					
+					 os=new ObjectOutputStream(socket.getOutputStream());
 					if (account.getFlag()==6||account.getFlag()==7) {
 						
 					account.setFlag(account.getFlag()+100);
@@ -101,14 +102,15 @@ public class ServerThread implements Runnable {
 						}
 						
 					}
+				
 				}
 				
 				} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	        os.close();
-			is.close();
+	     
+		
 			
 			
 			
@@ -121,15 +123,10 @@ public class ServerThread implements Runnable {
 	
 	
 	public static void Select_moduel(Socket socket){//选择模块
-		
-		ObjectInputStream is=null;
-		ObjectOutputStream os=null;
-		
+		ObjectInputStream os=null;
+		ObjectInputStream is=null;	
 		try {
-			
-			is=new ObjectInputStream(new  BufferedInputStream(socket.getInputStream()));
-	        
-	       
+			is=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));  
 	        try {
 				Account account=(Account) is.readObject();
 				if(account.getFlag()==-1) 
@@ -140,13 +137,23 @@ public class ServerThread implements Runnable {
 					case 0: Adminstrator_get(socket);break;//服务器获取信息并且写回
 					case 1: Administrator_send(socket);//服务器发送信息
 						break;
-					case 2:handel.registration_Thread();
+					case 2:handel.registration_Thread();//发送到挂号收费端
 					       handel.Charge_sum(); break;
 					case 3:handel.docter_hander();break;//医生划价
-					case 4:handel.Druger_info(); break;
+					case 4:handel.Druger_info(); break;//药房段
 					case 5:handel.statistic_Thread(); break;
 					case 6:handel.register_Thread(); break;//病人的注册
-					case 7 :handel.Screen_info();;   break;
+					case 7 :handel.Screen_info();  break;
+					
+	                case 10: handel.get_global_Thread();   break;/*发送通讯协议部分专门用于获取服务器的全局信息*/
+	                case 11:handel.set_global_Thread();    break;//接收全局变量
+	                case 12: handel.get_Register();       break;//发送注册的人员名单
+	                case 13:handel.get_Case_to_Docter(); break;//发送等待医生处理表单
+	                case 14: handel.set_Register_docter();  break;//接收等待医生处理的表单
+	                case 15:handel.set_Register_get_Drug(); break;//接收等待药方处理的表单
+	                case 16:handel.get_Register_Charged();  break;//发送给挂号端的表单
+	                case 18:handel.get_Register_get_Drug(); break;//发送给药房端的表单
+					
 					default:
 						break;
 					}

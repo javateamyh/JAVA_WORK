@@ -43,10 +43,7 @@ public class yuanzhangchaxun {
 	 static int port=5000;
     
 
-public yuanzhangchaxun (Account account) {
-	this.account=account;
-	check_up();
-}
+
 	public static void check_up() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -96,14 +93,14 @@ public yuanzhangchaxun (Account account) {
 	/**
 	 * Create the application.
 	 */
-	public yuanzhangchaxun() {
-		initialize();
-	}
+	
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public yuanzhangchaxun() {
+		// TODO Auto-generated constructor stub
+	
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

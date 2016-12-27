@@ -48,8 +48,7 @@ public class Screen extends JFrame {
 	private static WaitOffice waitOffice;//一个科室的排队情况
 	private static Waiter wait1;//一个医生后面的队初始化
 	private JPanel contentPane;
-	 static String host="127.0.0.1";
-	 static int port=5000;
+	private static Socket socket;
 
 	/**
 	 * Launch the application.
@@ -58,21 +57,17 @@ public class Screen extends JFrame {
 	
 	
 	public static void get_global_info(){
-		 new Thread(new Runnable() {
-			@Override
-			public void run() {
+	
 				// TODO Auto-generated method stub
-				Socket server3=null;
 				try {
-					ipconfig ip=new ipconfig();
-					server3=new  Socket(ip.getHost(),ip.getPort());
+					
 					ObjectInputStream is=null;
 					ObjectOutputStream os=null;
-					in=new ObjectInputStream(server3.getInputStream());
-					out=new ObjectOutputStream(server3.getOutputStream());
-					account.setFlag(7); 
+					
+					out=new ObjectOutputStream(socket.getOutputStream());
 				    out.writeObject(account);
 				    out.flush();
+				    in=new ObjectInputStream(socket.getInputStream());
 				    info=(Global_info)in.readObject();//从服务器接受科室的所有信息     
 				    officelist=info.getCount_office();
 			        RegisterDocter=(ArrayList<Case>)in.readObject();
@@ -84,29 +79,17 @@ public class Screen extends JFrame {
 					e.printStackTrace();
 				}
 			}
-		}).start();		 
+	 
 		 
-	 }
+	 
 	//public static void main(String[] args) throws IOException {
 	
-	public static void StartScreen() throws IOException {
-		    get_global_info();//获取服务器的全局信息
-		    EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Screen frame = new Screen(account);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public Screen(Account account) {
+	public Screen(Account account,Socket socket) {
 		this.account=account;
 		get_global_info();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
