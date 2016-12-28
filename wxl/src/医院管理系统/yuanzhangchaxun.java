@@ -131,26 +131,26 @@ public class yuanzhangchaxun {
 		case 0:{//每个科室的挂号量和总金额
 			Label label_1 = new Label("\u9009\u62E9\u6240\u8981\u67E5\u8BE2\u7684\u79D1\u5BA4\uFF1A");//选择科室标签
 			panel.add(label_1);
-			JRadioButton radioButton = new JRadioButton("\u751F\u6210\u997C\u72B6\u56FE");//是否生成饼状图的button
-			panel.add(radioButton);
+			//JRadioButton radioButton = new JRadioButton("\u751F\u6210\u997C\u72B6\u56FE");//是否生成饼状图的button
+			//panel.add(radioButton);
 			JComboBox comboBox_1 = new JComboBox(officename);//选择科室的下拉框
 			panel.add(comboBox_1);
 			comboBox_1.setSelectedIndex(-1);
 			int key1=comboBox_1.getSelectedIndex();//记录所要查询的科室
 			
-			if(radioButton.isSelected())//每个科室的挂号量和总金额（选择生成饼图统计）
-			{
+			//if(radioButton.isSelected())//每个科室的挂号量和总金额（选择生成饼图统计）
+			//{
 				
-			}
-			else
-			{//显示所选中科室的总金额
+			//}
+			//else
+			//{//显示所选中科室的总金额
 				JTextPane textPane = new JTextPane();
 				textPane.setText("总金额为："+office_list.get(key1).getCharge());
 				panel.add(textPane);
 				
 				//for(int i=0;i<office_list.size();i++)//每个科室挂号量和总金额
 					  //System.out.println(officename[i]+"的挂号量为：总金额为："+office_list.get(i).getCharge());
-			}
+			//}
 		}
 		case 1://查询药房各个药品的库存量；
 		{
